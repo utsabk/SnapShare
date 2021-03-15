@@ -7,4 +7,10 @@ const getImagesList = async (req, res) => {
   res.json(posts);
 };
 
-export { getImagesList };
+const getImageWithID = async (req, res) => {
+  const id = req.params.id;
+  const image = await model.getImageById(id);
+  res.json(image);
+};
+
+export { getImagesList, getImageWithID };

@@ -14,4 +14,16 @@ const getAllImages = async () => {
   }
 };
 
-export { getAllImages };
+const getImageById = async (id) => {
+  try {
+    const [rows] = await promisePool.query(
+      'SELECT * FROM `image` WHERE `image_id`=?',
+      id
+    );
+    return rows;
+  } catch (e) {
+    console.log('Error getImageById:-', e);
+  }
+};
+
+export { getAllImages, getImageById };
