@@ -4,7 +4,7 @@ import * as model from '../models/imageModel.js';
 
 const storage = multer.diskStorage({
   destination: (req, res, cb) => {
-    cb(null, './uploads/');
+    cb(null, './public/uploads/');
   },
   filename: (req, file, cb) => {
     const ext = file.originalname.split('.').slice(-1);
@@ -26,9 +26,14 @@ const getImageWithID = async (req, res) => {
 };
 
 const uploadImage = async (req, res) => {
-  const data = [req.file.filename, req.body.userId];
-  const upload = await model.postImage(data);
-  return res.send(upload);
+  try{
+    const data = [req.file.filename, req.body.userId];
+    const upload = await model.postImage(data);
+    res.send({'status':'insert ok'});
+  }catch (err){
+    console.log('Error uploadImage:-',err);
+  }
+ 
 };
 
 export { getImagesList, getImageWithID, uploadDest, uploadImage };

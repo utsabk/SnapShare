@@ -1,0 +1,15 @@
+doctype html
+head
+  meta(charset='utf8')
+  title Upload
+  link(href='./css/style.css' rel='stylesheet')
+.container
+  h1 List of Images
+  ul
+
+  h3 Add Picture
+  form.light-border(action='http://localhost:3000/image/' method='post' enctype='multipart/form-data')
+    input.light-border(type='number' name='userId' placeholder='User ID' required='')
+    input.light-border(type='file' name='image' accept="image/*" placeholder="Choose file")
+    button.light-border(type='submit') Save
+script(src='./js/main.js')
