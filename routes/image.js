@@ -3,16 +3,13 @@ import express from 'express';
 import * as controller from '../controllers/imageController.js';
 const router = express.Router();
 
-
 // get all images
 router.get('/', controller.getImagesList);
 
-router.get('/:id',controller.getImageWithID)
+// get a image with ID
+router.get('/:id', controller.getImageWithID);
 
-// create a post 
-router.post('/upload', (req,res) => {
-    res.send('You can POST images here.')
-});
-
+// create a post
+router.post('/',controller.uploadDest.single('image'), controller.uploadImage);
 
 export default router;

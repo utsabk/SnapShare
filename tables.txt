@@ -12,6 +12,9 @@ ALTER TABLE `image`
 ALTER TABLE `image`
   MODIFY `image_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
+ALTER TABLE `image`
+  MODIFY `time_stamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP;
+
 
 INSERT INTO `image` (`image_id`, `imagename`, `time_stamp`, `user_id`) VALUES
 (11, 'cat-094398887.png', '2021-03-15 00:00:01', 5),
