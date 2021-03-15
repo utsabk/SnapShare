@@ -1,0 +1,18 @@
+
+CREATE TABLE `image` (
+  `image_id` int(11) NOT NULL,
+  `imagename` text NOT NULL,
+  `time_stamp` timestamp NOT NULL,
+  `user_id` int(11) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+ALTER TABLE `image`
+  ADD PRIMARY KEY (`image_id`);
+
+ALTER TABLE `image`
+  MODIFY `image_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+
+INSERT INTO `image` (`image_id`, `imagename`, `time_stamp`, `user_id`) VALUES
+(11, 'cat-094398887.png', '2021-03-15 00:00:01', 5),
+(12, 'dog-087746586.png', '2021-03-15 12:00:01', 6);

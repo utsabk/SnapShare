@@ -2,13 +2,14 @@
 
 import dotenv from 'dotenv'
 import express from 'express';
-import mediaRoutes from './routes/media.js';
+import postRoutes from './routes/post.js';
+import pool from './db/databse.js';
 
 const app = express();
 
 dotenv.config();
 
-app.use('/media', mediaRoutes);
+app.use('/post', postRoutes);
 
 
 app.listen(process.env.APP_PORT, () => {
