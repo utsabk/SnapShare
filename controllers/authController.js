@@ -4,9 +4,11 @@ import passport from '../utils/pass.js';
 
 const userAuth = (req, res, next) => {
   passport.authenticate('local', { session: false }, (err, user, info) => {
+
+
     if (err || !user) {
       return res.status(400).json({
-        message: 'Something went wrong',
+        message: info.message,
         user: user,
       });
     }

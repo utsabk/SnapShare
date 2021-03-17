@@ -2,7 +2,7 @@
 import passport from 'passport';
 import passportLocal from 'passport-local';
 import passportJWT from 'passport-jwt';
-import { getUser, getUserLogin } from '../models/userModel.js';
+import { getUserWithEmail } from '../models/userModel.js';
 
 // Need to initialize before JWTStrategy else *Cannot read property 'fromAuthHeaderAsBearerToken' of undefined*
 const ExtractJWT = passportJWT.ExtractJwt;
@@ -11,14 +11,25 @@ const LocalStrategy = passportLocal.Strategy;
 const JWTStrategy = passportJWT.Strategy;
 
 passport.use(
-  new LocalStrategy((username, password, done) => {
+  new LocalStrategy(async (username, password, done) => {
     try {
-      const user = getUserLogin(username);
-      console.log('User:-', user);
-      if (user == undefined || user.password !== password) {
-        return done(null, false, { message: 'Username or password incorrect' });
+      //select only user from DB returned array
+      const [user] = await getUserWithEmail(username);
+      console.log('User returned from DB:-', user);
+
+      if (user == undefined) {
+        return done(null, false, { message: 'Incorrect email.' });
+      } else if (user.password !== password) {
+        return done(null, false, { message: 'Password incorrect' });
       }
-      return done(null, { ...user }, { message: 'Logged in successfully' });
+      // delete password before returning
+      delete user.password;
+
+      return done(
+        null,
+        { ...user }, // use spread syntax to create shallow copy to get rid of binary row type
+        { message: 'Logged in successfully' }
+      );
     } catch (err) {
       return done(err);
     }
@@ -33,7 +44,8 @@ passport.use(
     },
     async (jwtPayload, done) => {
       try {
-        const user = await getUserLogin(jwtPayload.email);
+        const user = await getUserWithEmail(jwtPayload.email);
+        // delete password before returning
         delete user.password;
         return done(null, user);
       } catch (err) {
