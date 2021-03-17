@@ -1,3 +1,4 @@
+<!--===============================================================================================-->
 
 CREATE TABLE `image` (
   `image_id` int(11) NOT NULL,
@@ -19,3 +20,25 @@ ALTER TABLE `image`
 INSERT INTO `image` (`image_id`, `imagename`, `time_stamp`, `user_id`) VALUES
 (11, 'cat-094398887.png', '2021-03-15 00:00:01', 5),
 (12, 'dog-087746586.png', '2021-03-15 12:00:01', 6);
+
+<!--===============================================================================================-->
+
+
+CREATE TABLE `user` (
+  `user_id` int(11) NOT NULL,
+  `username` text NOT NULL,
+  `email` text NOT NULL,
+  `password` text NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+ALTER TABLE `user`
+  ADD PRIMARY KEY (`user_id`);
+
+ALTER TABLE `user`
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+INSERT INTO `user` (`username`, `email`, `password`) VALUES
+('John Doe', 'john@metropolia.fi', '1234'),
+('Jane Doez', 'jane@metropolia.fi', 'qwer');
+
+<!--===============================================================================================-->
