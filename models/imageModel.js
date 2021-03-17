@@ -28,7 +28,7 @@ const getImageById = async (id) => {
 
 const postImage = async (data) => {
   try {
-    const [rows] = await promisePool.query(
+    const [rows] = await promisePool.execute(
       'INSERT INTO `image` (`imagename`,`user_id`) VALUES (?,?)',
       data
     );
