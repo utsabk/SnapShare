@@ -19,6 +19,7 @@
   "author": "utsabk",
   "license": "GPL-3.0",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "multer": "^1.4.2",

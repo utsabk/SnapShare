@@ -1,6 +1,7 @@
 'use strict';
 import jwt from 'jsonwebtoken';
 import passport from '../utils/pass.js';
+import bcrypt from 'bcryptjs';
 import { uploadUserData } from '../models/userModel.js';
 
 const authenticate = (req, res) => {
@@ -40,7 +41,13 @@ const userLogin = async (req, res) => {
   }
 };
 const userRegister = async (req, res, next) => {
-  const params = [req.body.username, req.body.email, req.body.password];
+  const hash = await bcrypt.hash(
+    req.body.password,
+    Number(process.env.SALT_ROUNDS)   //SALT_ROUNDS converted to a number
+  );
+
+  const params = [req.body.username, req.body.email, hash];
+
   if (await uploadUserData(params)) {
     // This will call next middleware on the list
     next();
@@ -51,8 +58,8 @@ const userRegister = async (req, res, next) => {
 
 const userLogout = async (req, res) => {
   // Invoking logout() will remove the req.user property and clear the login session (if any).
-  req.logout(); 
-  res.json({message: 'logout'});
-}
+  req.logout();
+  res.json({ message: 'logout' });
+};
 
 export { userLogin, userRegister, userLogout };

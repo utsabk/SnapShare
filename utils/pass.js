@@ -2,6 +2,7 @@
 import passport from 'passport';
 import passportLocal from 'passport-local';
 import passportJWT from 'passport-jwt';
+import bcrypt from 'bcryptjs';
 import { getUserWithEmail } from '../models/userModel.js';
 
 // Need to initialize before JWTStrategy else *Cannot read property 'fromAuthHeaderAsBearerToken' of undefined*
@@ -19,8 +20,9 @@ passport.use(
         const [user] = await getUserWithEmail(email);
         if (user == undefined) {
           return done(null, false, { message: 'Incorrect email.' });
-        } else if (user.password !== password) {
-          return done(null, false, { message: 'Password incorrect' });
+        }
+        if (!bcrypt.compare(password, user.password)) {
+          return done(null, false, { message: ' Incorrect password' });
         }
         // delete password before returning
         delete user.password;
