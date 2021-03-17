@@ -11,29 +11,30 @@ const LocalStrategy = passportLocal.Strategy;
 const JWTStrategy = passportJWT.Strategy;
 
 passport.use(
-  new LocalStrategy(async (username, password, done) => {
-    try {
-      //select only user from DB returned array
-      const [user] = await getUserWithEmail(username);
-      console.log('User returned from DB:-', user);
+  new LocalStrategy(
+    { usernameField: 'email', passwordField: 'password' },
+    async (email, password, done) => {
+      try {
+        //select only user from DB returned array
+        const [user] = await getUserWithEmail(email);
+        if (user == undefined) {
+          return done(null, false, { message: 'Incorrect email.' });
+        } else if (user.password !== password) {
+          return done(null, false, { message: 'Password incorrect' });
+        }
+        // delete password before returning
+        delete user.password;
 
-      if (user == undefined) {
-        return done(null, false, { message: 'Incorrect email.' });
-      } else if (user.password !== password) {
-        return done(null, false, { message: 'Password incorrect' });
+        return done(
+          null,
+          { ...user }, // use spread syntax to create shallow copy to get rid of binary row type
+          { message: 'Logged in successfully' }
+        );
+      } catch (err) {
+        return done(err);
       }
-      // delete password before returning
-      delete user.password;
-
-      return done(
-        null,
-        { ...user }, // use spread syntax to create shallow copy to get rid of binary row type
-        { message: 'Logged in successfully' }
-      );
-    } catch (err) {
-      return done(err);
     }
-  })
+  )
 );
 
 passport.use(
