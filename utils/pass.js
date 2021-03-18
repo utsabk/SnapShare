@@ -21,7 +21,7 @@ passport.use(
         if (user == undefined) {
           return done(null, false, { message: 'Incorrect email.' });
         }
-        if (!bcrypt.compare(password, user.password)) {
+        if (! await bcrypt.compare(password, user.password)) {
           return done(null, false, { message: ' Incorrect password' });
         }
         // delete password before returning
