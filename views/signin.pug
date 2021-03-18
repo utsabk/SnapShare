@@ -1,0 +1,40 @@
+doctype html
+head
+  title Login
+  meta(charset='UTF-8')
+  meta(name='viewport' content='width=device-width, initial-scale=1')
+  // ===============================================================================================
+  link(rel='icon' type='image/png' href='./images/icons/favicon.ico')
+  // ===============================================================================================
+  link(href='./modules/@fortawesome/fontawesome-free/css/all.min.css' rel='stylesheet')
+  // ===============================================================================================
+  link(rel='stylesheet' type='text/css' href='./css/authentication.css')
+  // ===============================================================================================
+.limiter
+  .container-login100
+    .wrap-login100
+      .login100-pic(data-tilt='')
+        img(src='./images/img-02.png' alt='IMG')
+      form#loginForm.login100-form
+        span.login100-form-title
+          | Member Login
+        span.login100-form-errorMessage
+        .wrap-input100
+          input#signInEmail.input100(type='text' name='email' placeholder='Email' required='')
+          span.focus-input100
+          span.symbol-input100
+            i.fa.fa-envelope(aria-hidden='true')
+        .wrap-input100
+          input#signInPassword.input100(type='password' name='password' placeholder='Password' required='')
+          span.focus-input100
+          span.symbol-input100
+            i.fa.fa-lock(aria-hidden='true')
+        .container-login100-form-btn
+          button.login100-form-btn(type='submit')
+            | Login
+        .text-center(style='padding-top: 136px;')
+          a.txt2(href='./signup')
+            | Create your Account 
+            i.fas.fa-long-arrow-alt-right(aria-hidden='true')
+script(src='./modules/jquery/dist/jquery.min.js')
+script(src='./js/auth.js')
