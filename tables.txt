@@ -42,3 +42,25 @@ INSERT INTO `user` (`username`, `email`, `password`) VALUES
 ('Jane Doez', 'jane@metropolia.fi', 'qwer');
 
 <!--===============================================================================================-->
+CREATE TABLE `comment` (
+  `comment_id` int(11) NOT NULL,
+  `content` text NOT NULL,
+  `time_stamp` timestamp NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `image_id` int(11) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+ALTER TABLE `comment`
+  ADD PRIMARY KEY (`comment_id`);
+
+ALTER TABLE `comment`
+  MODIFY `comment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+ALTER TABLE `comment`
+  MODIFY `time_stamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP;
+
+INSERT INTO `comment` (`content`,`user_id`,`image_id`) VALUES
+('Nice picture !!', 10, 23),
+('Beautiful !!', 11, 20);
+
+<!--===============================================================================================-->
