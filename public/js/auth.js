@@ -24,7 +24,7 @@ const myFetch = async (endpoint, fd) => {
 const saveToken = (response) => {
   localStorage.setItem('userId', response.user_id);
   localStorage.setItem('token', response.token);
-  location.replace('./upload');
+  location.replace('./index.html');
 };
 
 $(() => {
@@ -70,7 +70,7 @@ $(() => {
     const response = await myFetch('register', fd);
 
     if (response.token) {
-      saveToken(response.token);
+      saveToken(response);
     } else {
       console.log('Error occoured', response.error);
     }
@@ -90,7 +90,7 @@ $(() => {
     const response = await myFetch('login', fd);
     console.log('this is token', response);
     if (response.token) {
-      saveToken(response.token);
+      saveToken(response);
     } else {
       $('.login100-form-errorMessage').html(response.error);
       console.log('Error occoured', response.error);
