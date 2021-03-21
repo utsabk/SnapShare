@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+  <meta charset="UTF-8" />
+  <title>Page Title</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="stylesheet" href="./css/home.css" />
+  <!--===============================================================================================-->
+  <link rel="stylesheet" type="text/css" href="./css/header.css" />
+
+  <link
+    href="./modules/@fortawesome/fontawesome-free/css/all.min.css"
+    rel="stylesheet"
+  />
+
+  <header>
+    <div class="header">
+      <div class="header-right">
+        <img src="./images/logo.png" alt="IMG" />
+      </div>
+
+      <div class="search-container">
+        <form id="search-form">
+          <input type="text" placeholder="Search.." name="search" required />
+          <button type="submit" class="search-btn">Search</button>
+        </form>
+      </div>
+
+      <div class="signin">
+        <i id="userIcon" class="fas fa-user fa-2x" aria-hidden="true"></i>
+        <a id="SignInBtn" href="signin.html">Sign In</a>
+      </div>
+
+      <!-- <form> -->
+        <form class="upload-form" enctype="multipart/form-data">
+          <div class="file-input">
+            <label id="fileLabel" for="fileInput">
+              Select file
+            </label>
+            <input id="fileInput" type="file" name="image" accept="image/*" placeholder="Choose file" required>
+
+          </div>
+          <button  type="submit">Save</button>
+        </form>
+  
+    </div>
+  </header>
+
+  <main>
+      <div class="container ">
+        <div class="profile">
+          <div class="profile-image">
+            <img
+              src="https://images.unsplash.com/photo-1513721032312-6a18a42c8763?w=152&h=152&fit=crop&crop=faces"
+              alt=""
+            />
+          </div>
+
+          <div class="profile-user-settings">
+            <h1 class="profile-user-name">janedoe_</h1>
+
+            <button class="btn profile-edit-btn">Edit Profile</button>
+
+            <button
+              class="btn profile-settings-btn"
+              aria-label="profile settings"
+            >
+              <i class="fas fa-cog" aria-hidden="true"></i>
+            </button>
+          </div>
+
+          <div class="profile-stats">
+            <ul>
+              <li>posts<span class="profile-stat-count">164</span></li>
+              <li>followers <span class="profile-stat-count">188</span></li>
+              <li>following<span class="profile-stat-count">206</span></li>
+            </ul>
+          </div>
+
+          <div class="profile-bio">
+            
+              <p class="profile-real-name">Jane Doe</p>
+              <p class="profile-bio-only">
+                  Lorem ipsum dolor sit, amet consectetur adipisicing elit📷✈️🏕️
+              </p>
+              
+        
+          </div>
+        </div>
+        <!-- End of profile section -->
+      </div>
+      <!-- End of container -->
+    
+
+    
+      <div class="container ">
+        <div class="gallery"></div>
+        <!-- End of gallery -->
+
+        <div class="loader"></div>
+      </div>
+
+      
+      <!-- End of container -->
+    
+
+      
+  </main>
+
+    <script src="./modules/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="./js/main.js"></script>   
+</html>
+
+
