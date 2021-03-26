@@ -1,151 +1,146 @@
 .header {
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
-    background-color: rgb(44,44,44);
-    line-height: 1rem;
-    box-shadow: 0 4px 8px 0 rgba(9, 236, 149, 0.2);
-    transition: 0.3s;    
-  }
-  
-  
-  /*----------------------------*\
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  background-color: rgb(44, 44, 44);
+  box-shadow: 0 4px 8px 0 rgba(9, 236, 149, 0.2);
+  position: fixed;
+  width: 100%;
+  left: 0;
+  z-index: 2;
+}
+
+/*----------------------------*\
         Logo
     \*----------------------------*/
-  
-  
-   .header .header-right {
-    align-items: center;
-    padding: 5px;
-    width: 120px;
-  }
+    .header .logo { 
+      color: #e2dfd5; 
+      font-family: "Great Vibes", cursive; 
+      font-size: 30px;
+       font-weight: normal; 
+       text-align: center; 
+       text-shadow: 0 1px 1px #fff; }
 
-  .header .header-right img {
-    width: 25%;
-    height:100%;
-    background: linear-gradient(-135deg, #b49eb1, #d1d3df);
-
-  }
-  
-  
-  /*----------------------------*\
+/*----------------------------*\
         Search
     \*----------------------------*/
-  
-  .header .search-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  .header input[type='text'] {
-    width: 500px;
-    height: 40px;
-    font-size: 16px;
-    padding: 0px 15px;
-    margin-right: -4px;
-    border: 1px solid #E4E7ED;
-    background-color: #FFF;
-  
-  }
-  .header .search-container .search-btn {
-      height: 40px;
-      width: 100px;
-      background: #D10024;
-      color: #FFF;
-      font-weight: 700;
-      border: none;
-      border-radius: 0px 40px 40px 0px;
-      float: right;
-  }
-  
-  
-  /*----------------------------*\
+
+.header .search-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.header input[type='text'] {
+  width: 250px;
+  height: 25px;
+  font-size: 12px;
+  padding: 0px 15px;
+  margin-right: -4px;
+  border: 1px solid #e4e7ed;
+  background-color: #fff;
+}
+.header .search-container .search-btn {
+  height: 25px;
+  width: 50px;
+  background: #d10024;
+  color: #fff;
+  font-weight: 700;
+  font-size: 10px;
+  border: none;
+  border-radius: 0px 40px 40px 0px;
+  float: right;
+}
+
+/*----------------------------*\
         User
     \*----------------------------*/
-  
-  .header .signin { 
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: white;
-    background-color: rgb(229,62,53);
-    padding: 3px;
 
-    
-  }
-  .header .signin a {
-    float: right;
-    text-decoration: none;
-    font-size: 16px;
-    color: white;
-    padding:5px;
-  }
-  
-  .header .signin:hover {
-    background-color: rgb(11, 79, 118);
-  }
-  
-  .header a.active {
-    background-color: #2196f3;
-    color: white;
-  }
-  
+.header .signin a {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+  font-size: 20px;
+  color: white;
+  background-color: rgb(229, 62, 53);
+}
 
-  /*----------------------------*\
+.signin a span {
+  padding: 2px;
+  margin: 2px;
+  z-index: 10;
+}
+.header .signin a:hover {
+  background-color: rgb(11, 79, 118);
+}
+
+.header a.active {
+  background-color: #2196f3;
+  color: white;
+}
+
+/*----------------------------*\
         Upload Image
     \*----------------------------*/
 
-  .upload-form{
-    display:flex;
-    justify-content: center;
-    align-items: center;
-  }
+.upload-form {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.upload-form #fileInput {
+  opacity: 0;
+  width: 0.1px;
+  height: 0.1px;
+}
+
+.upload-form  label{
+  display: block;
+  position: relative;
+  width: 150px;
+  height: 30px;
+  border-radius: 10px 0px 0px 10px;
+  background: linear-gradient(40deg, #ff6ec4, #7873f5);
+  box-shadow: 0 4px 7px rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: bold;
   
-  .upload-form #fileInput{
-    opacity: 0;
-    width: 0.1px;
-    height: 0.1px;
-  
-  }
-  .file-input label,
-  .upload-form button  {
-    display: block;
-    position: relative;
-    width: 150px;
-    height: 30px;
-    border-radius: 10px;
-    background: linear-gradient(40deg, #ff6ec4, #7873f5);
-    box-shadow: 0 4px 7px rgba(0, 0, 0, 0.4);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    font-weight: bold;
-    cursor: pointer;
-    transition: transform .2s ease-out;
-  }
-  /*------------------------------------------------------------------
+}
+
+.upload-form button {
+  background: linear-gradient(40deg, #ff6ec4, #927832);
+  height: 33px;
+  margin-top:1px;
+  border-radius: 0px 10px 10px 0px;
+  color: #fff;
+  font-weight: bold;
+
+}
+/*------------------------------------------------------------------
     [ Responsive ]*/
-  
-  @media screen and (max-width: 920px) {
-    .header input[type='text'] {
-      width: 400px;
-    }
+
+@media screen and (max-width: 920px) {
+  .header input[type='text'] {
+    width: 400px;
   }
-  
-  @media screen and (max-width: 815px) {
-    .header input[type='text'] {
-      width: 250px;
-    }
+}
+
+@media screen and (max-width: 815px) {
+  .header input[type='text'] {
+    width: 250px;
   }
-  
-  @media screen and (max-width: 665px) {
-      .header .search-container {
-          visibility: hidden;
-        }
-        .header {
-          justify-content: center;
-        }
-  
+}
+
+@media screen and (max-width: 665px) {
+  .header .search-container {
+    visibility: hidden;
   }
-  
+  .header {
+    justify-content: center;
+  }
+}

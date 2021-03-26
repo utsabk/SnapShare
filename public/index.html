@@ -14,9 +14,9 @@
 
   <header>
     <div class="header">
-      <div class="header-right">
-        <img src="./images/logo.png" alt="IMG" />
-      </div>
+      
+        <span class="logo" >SnapShare</span>   
+      
 
       <div class="search-container">
         <form id="search-form">
@@ -26,21 +26,23 @@
       </div>
 
       <div class="signin">
-        <i id="userIcon" class="fas fa-user fa-2x" aria-hidden="true"></i>
-        <a id="SignInBtn" href="signin.html">Sign In</a>
+        <a id="SignInBtn" href="./signin.html">
+          <span id="userIcon" class="fas fa-user " aria-hidden="true"></span>
+          <span>Sign In</span>
+        </a>
       </div>
 
       <!-- <form> -->
-        <form class="upload-form" enctype="multipart/form-data">
-          <div class="file-input">
+      
+        <form  class= "upload-form" enctype="multipart/form-data">
             <label id="fileLabel" for="fileInput">
-              Select file
+              Upload
             </label>
             <input id="fileInput" type="file" name="image" accept="image/*" placeholder="Choose file" required>
-
-          </div>
           <button  type="submit">Save</button>
         </form>
+    
+
   
     </div>
   </header>

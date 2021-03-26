@@ -11,6 +11,9 @@
   box-sizing: border-box;
 }
 
+body {
+  margin: 0px;
+}
 
 main {
   font-family: 'Open Sans', Arial, sans-serif;
