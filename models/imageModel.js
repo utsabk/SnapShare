@@ -39,4 +39,6 @@ const postImage = async (data) => {
   }
 };
 
+
+
 export { getAllImages, getImageById, postImage};

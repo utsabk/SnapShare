@@ -46,4 +46,17 @@ const uploadUserData = async (params) => {
   }
 };
 
-export { getUsersList, getUserWithId, getUserWithEmail, uploadUserData };
+const postProfile = async(data)=>{
+  try{
+    const [rows] = await promisePool.execute(
+      'UPDATE `user` SET `dp`=? WHERE `user_id`=?',
+      data
+    );
+    return rows;
+  }
+  catch (err){
+    console.log('Error postProfile:-',err)
+  }
+}
+
+export { getUsersList, getUserWithId, getUserWithEmail, uploadUserData, postProfile };

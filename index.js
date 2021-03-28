@@ -5,6 +5,8 @@ import express from 'express';
 import imageRoutes from './routes/imageRoutes.js';
 import authRoutes from './routes/authRoutes.js';
 import commentRoutes from './routes/commentRoutes.js';
+import userRoutes from './routes/userRoutes.js';
+
 const app = express();
 
 app.use(express.static('public'));
@@ -15,6 +17,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/image', imageRoutes);
 app.use('/auth', authRoutes);
 app.use('/comment', commentRoutes);
+app.use('/user', userRoutes);
 
 app.listen(process.env.APP_PORT, () => {
   console.log(`App running on port ${process.env.APP_PORT}`);
