@@ -26,7 +26,8 @@ CREATE TABLE `user` (
   `user_id` int(11) NOT NULL,
   `username` text NOT NULL,
   `email` text NOT NULL,
-  `password` text NOT NULL
+  `password` text NOT NULL,
+  `dp`  text DEFAULT ''
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 ALTER TABLE `user`
