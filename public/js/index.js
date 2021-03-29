@@ -10,7 +10,7 @@ $(() => {
     const response = await fetch(url + '/user/' + id);
     const user = await response.json();
     if (user) {
-      $('.profile-image').css('background-image', `url(./profile/${user.dp})`);
+      $('.profile-image').css('background-image', `url(./profiles/${user.dp})`);
       $('.profile-user-name').text(user.username);
     }
   };
@@ -33,8 +33,17 @@ $(() => {
     images.forEach((post) => {
       $('.gallery').append(
         `<div class="gallery-item" tabindex="0">
-        <img src="./uploads/${post.imagename}" class="gallery-image" alt="" />
-        <div class="gallery-item-info">
+        
+
+          <div class="chip">
+            <img src="./profiles/${post.dp}"  alt="Person" width="96" height="96">
+            ${post.username}
+            <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+          </div>
+
+
+          <img src="./uploads/${post.imagename}" class="gallery-image" alt="" />
+          <div class="gallery-item-info">
             <ul>
             <li class="gallery-item-likes">
                 <span class="visually-hidden">Likes:</span>
