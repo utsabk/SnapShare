@@ -17,12 +17,14 @@ $(() => {
 
   // remove signin button if loggedin
   if (userId) {
+    $('.profile').show();
     $('.signin').hide();
     populateProfile(userId);
   }
   // remove upload button if not loggedin
   if (!userId) {
     $('.upload-form').hide();
+    $('.profile').hide();
   }
   // populate profile databse
 
@@ -69,7 +71,7 @@ $(() => {
         $(`.${post.image_id}-comments`).append(post.comment_count);
       }
 
-      $('.gallery-item').on('click', () => {
+      $('.gallery-image').on('click', () => {
         //Get original image URL
         const imgUrl = `./uploads/${post.imagename}`;
         //Open image in new tab

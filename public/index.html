@@ -52,7 +52,7 @@
       <div class="profile">
         <a id="profile-picture" aria-label="Change Profile Picture">
           <div class="profile-image" style="background-image:
-           url('https://images.unsplash.com/photo-1513721032312-6a18a42c8763?w=152&h=152&fit=crop&crop=faces')"
+           url('http://goo.gl/vyAs27')"
             >
             <span class="btn-change-image">
               <input  id="profileImg" type="file" accept="image/*" style="display:none;" />
@@ -70,11 +70,29 @@
           <button class="btn profile-edit-btn">Edit Profile</button>
 
           <button
+            id="profile-settings-btn"
             class="btn profile-settings-btn"
             aria-label="profile settings"
           >
-            <i class="fas fa-cog" aria-hidden="true"></i>
+            <i class="fas fa-sign-out-alt" aria-hidden="true"></i>
           </button>
+
+          <div id="id01" class="modal">
+            <span class="close" title="Close Modal">×</span>
+            <form class="modal-content">
+              <div class="container"> 
+                <h1>Logout</h1>
+                <p>Are you sure you want to Logout?</p>
+              
+                <div class="clearfix">
+                  <button class="cancelbtn">Cancel</button>
+                  <button class="deletebtn">Logout</button>
+                </div>
+              </div>
+            </form>
+          </div>
+
+
         </div>
 
         <!-- <div class="profile-stats">
