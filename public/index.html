@@ -14,7 +14,9 @@
 
   <header>
     <div class="header">
-      <span class="logo">SnapShare</span>
+      
+        <span class="logo" >SnapShare</span>   
+      
 
       <div class="search-container">
         <form id="search-form">
@@ -25,89 +27,89 @@
 
       <div class="signin">
         <a id="SignInBtn" href="./signin.html">
-          <span id="userIcon" class="fas fa-user" aria-hidden="true"></span>
+          <span id="userIcon" class="fas fa-user " aria-hidden="true"></span>
           <span>Sign In</span>
         </a>
       </div>
 
       <!-- <form> -->
+      
+        <form  class= "upload-form" enctype="multipart/form-data">
+            <label id="fileLabel" for="fileInput">
+              Upload
+            </label>
+            <input id="fileInput" type="file" name="image" accept="image/*" placeholder="Choose file" required>
+          <button  type="submit">Save</button>
+        </form>
+    
 
-      <form class="upload-form" enctype="multipart/form-data">
-        <label id="fileLabel" for="fileInput"> Upload </label>
-        <input
-          id="fileInput"
-          type="file"
-          name="image"
-          accept="image/*"
-          placeholder="Choose file"
-          required
-        />
-        <button type="submit">Save</button>
-      </form>
+  
     </div>
   </header>
 
   <main>
-    <div class="container">
-      <div class="profile">
-        <a id="profile-picture" aria-label="Change Profile Picture">
-          <div class="profile-image" style="background-image:
-           url('https://images.unsplash.com/photo-1513721032312-6a18a42c8763?w=152&h=152&fit=crop&crop=faces')"
-            >
-            <span class="btn-change-image">
-              <input  id="profileImg" type="file" accept="image/*" style="display:none;" />
-              <label id="label"  for="profileImg">
-                <i class="fas fa-camera"></i>
-                Change Image
-              </label>
-            </span>
+      <div class="container ">
+        <div class="profile">
+          <div class="profile-image">
+            <img
+              src="https://images.unsplash.com/photo-1513721032312-6a18a42c8763?w=152&h=152&fit=crop&crop=faces"
+              alt=""
+            />
           </div>
-        </a>
 
-        <div class="profile-user-settings">
-          <h1 class="profile-user-name">janedoe_</h1>
+          <div class="profile-user-settings">
+            <h1 class="profile-user-name">janedoe_</h1>
 
-          <button class="btn profile-edit-btn">Edit Profile</button>
+            <button class="btn profile-edit-btn">Edit Profile</button>
 
-          <button
-            class="btn profile-settings-btn"
-            aria-label="profile settings"
-          >
-            <i class="fas fa-cog" aria-hidden="true"></i>
-          </button>
+            <button
+              class="btn profile-settings-btn"
+              aria-label="profile settings"
+            >
+              <i class="fas fa-cog" aria-hidden="true"></i>
+            </button>
+          </div>
+
+          <div class="profile-stats">
+            <ul>
+              <li>posts<span class="profile-stat-count">164</span></li>
+              <li>followers <span class="profile-stat-count">188</span></li>
+              <li>following<span class="profile-stat-count">206</span></li>
+            </ul>
+          </div>
+
+          <div class="profile-bio">
+            
+              <p class="profile-real-name">Jane Doe</p>
+              <p class="profile-bio-only">
+                  Lorem ipsum dolor sit, amet consectetur adipisicing elit📷✈️🏕️
+              </p>
+              
+        
+          </div>
         </div>
-
-        <div class="profile-stats">
-          <ul>
-            <li>posts<span class="profile-stat-count">164</span></li>
-            <li>followers <span class="profile-stat-count">188</span></li>
-            <li>following<span class="profile-stat-count">206</span></li>
-          </ul>
-        </div>
-
-        <div class="profile-bio">
-          <p class="profile-real-name">Jane Doe</p>
-          <p class="profile-bio-only">
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit📷✈️🏕️
-          </p>
-        </div>
+        <!-- End of profile section -->
       </div>
-      <!-- End of profile section -->
-    </div>
-    <!-- End of container -->
+      <!-- End of container -->
+    
 
-    <div class="container">
-      <div class="gallery"></div>
-      <!-- End of gallery -->
+    
+      <div class="container ">
+        <div class="gallery"></div>
+        <!-- End of gallery -->
 
-      <div class="loader"></div>
-    </div>
+        <div class="loader"></div>
+      </div>
 
-    <!-- End of container -->
+      
+      <!-- End of container -->
+    
+
+      
   </main>
 
-  <script src="./modules/jquery/dist/jquery.min.js"></script>
-  <script type="text/javascript" src="./js/index.js"></script>
-  <script type="text/javascript" src="./js/profile.js"></script>
+    <script src="./modules/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="./js/main.js"></script>   
+</html>
 
-  </html>
+

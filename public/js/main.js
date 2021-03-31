@@ -3,28 +3,16 @@
 const url = 'http://localhost:3000';
 
 $(() => {
-  // window makes it a global variable, accisible from any js file
-  window.userId = localStorage.getItem('userId');
-
-  window.populateProfile = async (id) => {
-    const response = await fetch(url + '/user/' + id);
-    const user = await response.json();
-    if (user) {
-      $('.profile-image').css('background-image', `url(./profile/${user.dp})`);
-      $('.profile-user-name').text(user.username);
-    }
-  };
+  const userId = localStorage.getItem('userId');
 
   // remove signin button if loggedin
   if (userId) {
     $('.signin').hide();
-    populateProfile(userId);
   }
   // remove upload button if not loggedin
   if (!userId) {
     $('.upload-form').hide();
   }
-  // populate profile databse
 
   const populateImages = async () => {
     const response = await fetch(url + '/image/');
@@ -79,12 +67,13 @@ $(() => {
     const { name: fileName, size } = file;
     // Convert size in bytes to kilo bytes
     const fileSize = (size / 1000).toFixed(2);
-
+    
     $('#fileLabel').text(fileName);
   });
 
   // submit upload image
   $('.upload-form').on('submit', async (event) => {
+   
     event.preventDefault();
 
     const fd = new FormData();
