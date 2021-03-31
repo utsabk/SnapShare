@@ -1,7 +1,7 @@
 'use strict';
 
 const postDP = async (fetchOptions) => {
-  const response = await fetch(url + '/user/profile', fetchOptions);
+  const response = await fetch('./user/profile', fetchOptions);
   const result = await response.json();
 
   return result;

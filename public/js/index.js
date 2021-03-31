@@ -1,13 +1,12 @@
 'use strict';
 
-const url = 'http://localhost:3000';
 
 $(() => {
   // window makes it a global variable, accisible from any js file
   window.userId = localStorage.getItem('userId');
 
   window.populateProfile = async (id) => {
-    const response = await fetch(url + '/user/' + id);
+    const response = await fetch('./user/' + id);
     const user = await response.json();
     if (user) {
       $('.profile-image').css('background-image', `url(./profiles/${user.dp})`);
@@ -29,7 +28,7 @@ $(() => {
   // populate profile databse
 
   const populateImages = async () => {
-    const response = await fetch(url + '/image/');
+    const response = await fetch('./image/');
     const images = await response.json();
     $('.gallery').html('');
     images.forEach((post) => {
@@ -108,7 +107,7 @@ $(() => {
     };
 
     console.log('fetchOptions', fetchOptions);
-    const response = await fetch(url + '/image/', fetchOptions);
+    const response = await fetch('./image/', fetchOptions);
     const result = await response.json();
     if (result.status) {
       populateImages();

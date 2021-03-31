@@ -1,6 +1,6 @@
 'use strict';
 
-const query = 'http://localhost:3000/auth/';
+const query = './auth/';
 
 const myFetch = async (endpoint, fd) => {
   var requestOptions = {
