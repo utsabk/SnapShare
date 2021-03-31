@@ -7,9 +7,7 @@ const promisePool = pool.promise();
 const getAllImages = async () => {
   try {
     // query database using promises
-    const [rows] = await promisePool.execute(
-      'SELECT * FROM `image` INNER JOIN `user` ON image.owner_id = user.user_id;'
-      );
+    const [rows] = await promisePool.execute('SELECT * FROM `image`');
     return rows;
   } catch (e) {
     console.log('Error getAllPosts:-', e);

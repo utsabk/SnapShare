@@ -13,6 +13,6 @@ const storage = (path) =>
   });
 const uploadDestPost = multer({ storage: storage('./public/uploads/') });
 
-const uploadDestProfile = multer({ storage: storage('./public/profiles/') });
+const uploadDestProfile = multer({ storage: storage('./public/profile/') });
 
 export { uploadDestPost, uploadDestProfile };
