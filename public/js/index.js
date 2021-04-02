@@ -1,6 +1,5 @@
 'use strict';
 
-
 $(() => {
   // window makes it a global variable, accisible from any js file
   window.userId = localStorage.getItem('userId');
@@ -27,19 +26,15 @@ $(() => {
   }
   // populate profile databse
 
-  const populateImages = async () => {
-    const response = await fetch('./image/');
-    const images = await response.json();
+  const createPostCards = (posts) => {
     $('.gallery').html('');
-    images.forEach((post) => {
+    posts.forEach((post, i) => {
       $('.gallery').append(
-        `<div class="gallery-item" tabindex="0">
-        
-
+        `<div id="image-index-${i}" class="gallery-item" tabindex="0">
           <div class="chip">
             <img src="./profiles/${post.dp}"  alt="Person" width="96" height="96">
             ${post.username}
-            <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+            <i class="fa fa-trash" aria-hidden="true"></i>
           </div>
 
 
@@ -63,12 +58,79 @@ $(() => {
       `
       );
 
+      $(`#image-index-${i}`).append(
+        `<div id="image-index-${i}-modal" class="modal">
+          <span class="close" title="Close Modal">×</span>
+          <form class="modal-content">
+            <div class="container"> 
+              <h1>Delete</h1>
+              <p>Are you sure you want to Delete?</p>
+            
+              <div class="clearfix">
+                <button class="cancelbtn">Cancel</button>
+                <button class="deletebtn">Delete</button>
+              </div>
+            </div>
+          </form>
+        </div>`
+      );
+
+      $(`#image-index-${i} .chip i`).on('click', (event) => {
+      
+          const $modal = $(`#image-index-${i}-modal`);
+
+          $modal.show();
+
+          $(`#image-index-${i}-modal .close`).on('click', (e) => {
+            e.preventDefault();
+
+            $modal.hide();
+          });
+
+          $(`#image-index-${i}-modal .cancelbtn`).on('click', (event) => {
+            event.preventDefault();
+            $modal.hide();
+          });
+
+          $(`#image-index-${i}-modal  .deletebtn`).on('click', async (event) => {
+            event.preventDefault();
+
+            const clickTarget = event.target;
+
+            console.log('This is clickTarget', clickTarget);
+            console.log('This is post.image_id}', post.image_id);
+
+            const fetchOptions = {
+              method: 'DELETE',
+            };
+            try {
+              const response = await fetch(`./image/${post.image_id}`,fetchOptions)
+              const json = await response.json();
+              console.log('delete response', json);
+              populateImages();
+            } catch (err) {
+              console.log(err.message);
+            }
+            $modal.hide();
+          });
+          // When the user clicks anywhere outside of the modal, close it
+          $(document).on('click', (event) => {
+            if ($(event.target).is($modal)) {
+              $modal.hide();
+            }
+          });
+        });
+
+
       if (post.like_count) {
         $(`.${post.image_id}-likes`).append(post.like_count);
       }
       if (post.comment_count) {
         $(`.${post.image_id}-comments`).append(post.comment_count);
       }
+
+      //<!--===============================================================================================-->
+      /*--- MAP  MODAL  ---*/
 
       $('.gallery-image').on('click', () => {
         //Get original image URL
@@ -77,6 +139,12 @@ $(() => {
         window.open(imgUrl, '_blank');
       });
     });
+  };
+
+  const populateImages = async () => {
+    const response = await fetch('./image/');
+    const images = await response.json();
+    createPostCards(images);
   };
 
   populateImages();
@@ -110,6 +178,8 @@ $(() => {
     const response = await fetch('./image/', fetchOptions);
     const result = await response.json();
     if (result.status) {
+      $('#fileLabel').text('Upload');
+      $('.upload-form').trigger('reset');
       populateImages();
     }
   });

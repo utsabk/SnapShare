@@ -84,8 +84,10 @@ img {
   background-blend-mode: multiply;
   color: transparent;
   transition: all .3s ease;
+  font-family: 'FontAwesome';
+  background-image: url('../images/logo.png')
 }
-
+  
 .profile-image:hover {
     background-color: rgba(0,0,0,.5);
     z-index: 10000;
@@ -231,10 +233,11 @@ img {
 }
 
 /* Modal Content/Box */
-.modal-content {
+.modal .modal-content{
   background-color: #fefefe;
   margin: 5% auto 15% auto; /* 5% from the top, 15% from the bottom and centered */
   border: 1px solid #888;
+  color: #1a1d1a;
   width: 20%; /* Could be more or less, depending on screen size */
 
 }
@@ -289,7 +292,7 @@ img {
   margin: 0 10px 0 -25px;
   height: 50px;
   width: 50px;
-  border-radius: 50%;
+  border-radius:50% ;
   box-shadow: 0 4px 8px 0 rgba(104, 99, 99, 0.2);
 }
 

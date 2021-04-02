@@ -9,7 +9,7 @@ const getAllImages = async () => {
     // query database using promises
     const [rows] = await promisePool.execute(
       'SELECT * FROM `image` INNER JOIN `user` ON image.owner_id = user.user_id;'
-      );
+    );
     return rows;
   } catch (e) {
     console.log('Error getAllPosts:-', e);
@@ -18,10 +18,11 @@ const getAllImages = async () => {
 
 const getImageById = async (id) => {
   try {
-    const [rows] = await promisePool.execute(
-      'SELECT * FROM `image` WHERE `image_id`=?',
-      [id]
-    );
+    const [
+      rows,
+    ] = await promisePool.execute('SELECT * FROM `image` WHERE `image_id`=?', [
+      id,
+    ]);
     return rows;
   } catch (e) {
     console.log('Error getImageById:-', e);
@@ -29,7 +30,7 @@ const getImageById = async (id) => {
 };
 
 const postImage = async (data) => {
-  console.log('This is data:-',data)
+  console.log('This is data:-', data);
   try {
     const [rows] = await promisePool.execute(
       'INSERT INTO `image` (`imagename`,`owner_id`) VALUES (?,?)',
@@ -41,6 +42,15 @@ const postImage = async (data) => {
   }
 };
 
+const deleteImage = async (id) => {
+  try {
+    const [rows] = await promisePool.execute('DELETE FROM `image` WHERE `image_id`=?', 
+    [id]
+    );
+    return rows;
+  } catch (err) {
+    console.log('Error deleteimage:', err);
+  }
+};
 
-
-export { getAllImages, getImageById, postImage};
+export { getAllImages, getImageById, postImage,deleteImage };

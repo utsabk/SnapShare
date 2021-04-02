@@ -3,8 +3,10 @@ import * as controller from '../controllers/commentController.js';
 
 const router = express.Router();
 
-router.get('/', controller.getAllComments);
+router.route('/')
+.get(controller.getAllComments)
+.post(controller.postComment)
+
 router.get('/:id', controller.getCommentByImage);
-router.post('/', controller.postComment)
 
 export default router;

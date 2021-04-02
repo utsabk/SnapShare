@@ -39,16 +39,18 @@ $(() => {
   });
 
   const $modal = $('#id01');
-    $('.close').on('click', (e) => {
+    $('#id01 .close').on('click', (e) => {
     $modal.hide();
     });
   $('#profile-settings-btn').on('click', (e) => {
     $modal.show();
   });
-  $('.cancelbtn').on('click', (e) => {
+  $('#id01 .cancelbtn').on('click', (e) => {
     $modal.hide();
   });
-  $('.deletebtn').on('click', (e) => {
+  $('#id01 .deletebtn').on('click', (e) => {
+    localStorage.clear();
+    location.reload();
     $modal.hide();
   });
     // When the user clicks anywhere outside of the modal, close it
@@ -56,11 +58,6 @@ $(() => {
         if ($(event.target).is($modal) ) {
             $modal.hide();
         }  
-    })
-
-    $('.deletebtn').on('click',(event) => {
-        localStorage.clear();
-        location.reload();
     })
 
 });
