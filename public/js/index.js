@@ -54,6 +54,13 @@ $(() => {
               </li>
             </ul>
         </div>
+        <div class="comment-section">
+        <div id="posted-comments"></div>
+          <form class="comment-form" method="POST">
+            <textarea aria-label="Add a comment…" placeholder="Add a comment…" ></textarea>
+            <button type="submit" disabled="">Post</button>
+          </form>
+        </div>
       </div>
       `
       );
@@ -76,54 +83,129 @@ $(() => {
         </div>`
       );
 
-      // Only owner of the post allowed to delete 
-      if(userId == post.owner_id){
+      const populateComments = async (id) => {
+        try {
+          const response = await fetch(`./comment/${id}`);
+          const comments = await response.json();
+          createComments(comments);
+        } catch (err) {
+          console.log(err.message);
+        }
+      };
+      const createComments = async(comments) => {
+        $(`#image-index-${i} #posted-comments`).html('');
+        comments.forEach((comment) => {
+          const listItem = `
+          <div class="comment-heading">
+              <div class="comment-info">
+                <a href="#" class="comment-author">${comment.username}</a>
+                <p class="m-0"></p>
+            </div>
+          </div>
+
+            <div class="comment-body">
+              <p> ${comment.content}</p>
+            </div>`;
+          $(`#image-index-${i} #posted-comments`).append(listItem);
+        
+        setInterval(()=>{
+        $(`#image-index-${i} .m-0`).html(timeAgo(comment.time_stamp))
+      },1000)
+        
+        });
+      };
+
+      
+
+      populateComments(post.image_id);
+      // Only owner of the post allowed to delete
+      if (userId == post.owner_id) {
         $(`#image-index-${i} .chip i`).show();
       }
 
       // When clicked on the trash icon
       $(`#image-index-${i} .chip i`).on('click', (event) => {
-      
-          const $modal = $(`#image-index-${i}-modal`);
+        const $modal = $(`#image-index-${i}-modal`);
 
-          $modal.show();
+        $modal.show();
 
-          $(`#image-index-${i}-modal .close`).on('click', (e) => {
-            e.preventDefault();
+        $(`#image-index-${i}-modal .close`).on('click', (e) => {
+          e.preventDefault();
 
-            $modal.hide();
-          });
-
-          $(`#image-index-${i}-modal .cancelbtn`).on('click', (event) => {
-            event.preventDefault();
-            $modal.hide();
-          });
-
-          $(`#image-index-${i}-modal  .deletebtn`).on('click', async (event) => {
-            event.preventDefault();
-            
-            const fetchOptions = {
-              method: 'DELETE',
-              headers: { 'Authorization':'Bearer ' +localStorage.getItem('token') },
-            };
-            try {
-              const response = await fetch(`./image/${post.image_id}`,fetchOptions)
-              const json = await response.json();
-              console.log('delete response', json);
-              populateImages();
-            } catch (err) {
-              console.log(err.message);
-            }
-            $modal.hide();
-          });
-          // When the user clicks anywhere outside of the modal, close it
-          $(document).on('click', (event) => {
-            if ($(event.target).is($modal)) {
-              $modal.hide();
-            }
-          });
+          $modal.hide();
         });
 
+        $(`#image-index-${i}-modal .cancelbtn`).on('click', (event) => {
+          event.preventDefault();
+          $modal.hide();
+        });
+
+        $(`#image-index-${i}-modal  .deletebtn`).on('click', async (event) => {
+          event.preventDefault();
+
+          const fetchOptions = {
+            method: 'DELETE',
+            headers: {
+              Authorization: 'Bearer ' + localStorage.getItem('token'),
+            },
+          };
+          try {
+            const response = await fetch(
+              `./image/${post.image_id}`,
+              fetchOptions
+            );
+            const json = await response.json();
+            console.log('delete response', json);
+            populateImages();
+          } catch (err) {
+            console.log(err.message);
+          }
+          $modal.hide();
+        });
+        // When the user clicks anywhere outside of the modal, close it
+        $(document).on('click', (event) => {
+          if ($(event.target).is($modal)) {
+            $modal.hide();
+          }
+        });
+      });
+
+      $(`#image-index-${i} textarea`).on('keyup', (event) => {
+        const textare_val = $(`#image-index-${i} textarea`).val();
+
+        if (textare_val != '') {
+          $(`#image-index-${i} .comment-form button`).attr('disabled', false);
+        } else {
+          $(`#image-index-${i} .comment-form button`).attr('disabled', true);
+        }
+      });
+
+      $('.comment-form').on('submit', async (event) => {
+        event.preventDefault();
+        
+        const urlencoded = new URLSearchParams();
+        urlencoded.append("content", $(`#image-index-${i} textarea`).val());
+        urlencoded.append("userId", userId);
+        urlencoded.append("imageId", post.image_id);
+        
+        const requestOptions = {
+          method: 'POST',
+          body: urlencoded,
+          redirect: 'follow'
+        };
+
+        try {
+          const response = await fetch('./comment/', requestOptions);
+          const result = await response.json();
+          if (result.message) {
+            $(`#image-index-${i} textarea`).val('')
+            $(`#image-index-${i} .comment-form button`).attr('disabled', true);
+            populateComments(post.image_id);
+          }
+        } catch (e) {
+          console.log(e.message);
+        }
+      });
 
       if (post.like_count) {
         $(`.${post.image_id}-likes`).append(post.like_count);
@@ -186,4 +268,50 @@ $(() => {
       populateImages();
     }
   });
+
+  const timeAgo = (time) => {
+    let result;
+    if (typeof time === 'string') {
+      time = Date.parse(time);
+    }
+    const difference = Date.now() - time;
+
+    if (difference < 5 * 1000) {
+      return 'just now';
+    } else if (difference < 90 * 1000) {
+      return 'moments ago';
+    }
+
+    //it has minutes
+    if ((difference % 1000) * 3600 > 0) {
+      if (Math.floor((difference / 1000 / 60) % 60) > 0) {
+        let s = Math.floor((difference / 1000 / 60) % 60) == 1 ? '' : 's';
+        result = `${Math.floor((difference / 1000 / 60) % 60)} minute${s} `;
+      }
+    }
+
+    //it has hours
+    if ((difference % 1000) * 3600 * 60 > 0) {
+      if (Math.floor((difference / 1000 / 60 / 60) % 24) > 0) {
+        let s = Math.floor((difference / 1000 / 60 / 60) % 24) == 1 ? '' : 's';
+        result =
+          `${Math.floor((difference / 1000 / 60 / 60) % 24)} hour${s}${
+            result == '' ? '' : ','
+          } ` + result;
+      }
+    }
+
+    //it has days
+    if ((difference % 1000) * 3600 * 60 * 24 > 0) {
+      if (Math.floor(difference / 1000 / 60 / 60 / 24) > 0) {
+        let s = Math.floor(difference / 1000 / 60 / 60 / 24) == 1 ? '' : 's';
+        result =
+          `${Math.floor(difference / 1000 / 60 / 60 / 24)} day${s}${
+            result == '' ? '' : ','
+          } ` + result;
+      }
+    }
+
+    return result + ' ago';
+  };
 });

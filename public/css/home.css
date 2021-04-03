@@ -350,6 +350,57 @@ img {
   object-fit: cover;
 }
 
+.comment-form{
+  display: flex;
+  align-items: center;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  transition: 0.3s;
+
+}
+.comment-form textarea {
+  width: 100%;
+  
+}
+.comment-form button {
+  padding: 8px;
+}
+#posted-comments{
+  position: relative;
+  margin: 20px auto;
+}
+.comment-heading {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+}
+.comment-info {
+  color: rgba(0, 0, 0, 0.5);
+  margin-left: 10px;
+  font-size: 14px;
+}
+.m-0 {
+  margin: 0;
+  font-size: 10px;
+}
+.comment-author {
+  color: rgba(0, 0, 0, 0.85);
+  font-weight: bold;
+  text-decoration: none;
+}
+.comment-author:hover {
+  text-decoration: underline;
+}
+
+.comment-body p {
+  padding: 0 5px;
+  color: #030303;
+  padding-left: 20px;
+  font-size: 16px !important;
+}
+
+
+
+
 /* Loader */
 
 .loader {

@@ -59,7 +59,7 @@ ALTER TABLE `comment`
   MODIFY `time_stamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP;
 
 INSERT INTO `comment` (`content`,`user_id`,`image_id`) VALUES
-('Nice picture !!', 10, 23),
-('Beautiful !!', 11, 20);
+('Nice picture !!', 13, 68),
+('Beautiful !!', 12, 68);
 
 <!--===============================================================================================-->

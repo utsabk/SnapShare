@@ -13,7 +13,8 @@ const getCommentsList = async () => {
 const getCommentsOfAnImage = async (imageId) => {
   try {
     const [rows] = await promisePool.execute(
-      'SELECT * FROM `comment` WHERE `image_id` = ?',
+      'SELECT * FROM `comment` INNER JOIN `user` ON comment.user_id = user.user_id WHERE `image_id` = ?;'
+      ,
       [imageId] // Values should pass as an array
     );
     return rows;
