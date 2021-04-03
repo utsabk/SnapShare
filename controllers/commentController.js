@@ -13,11 +13,28 @@ const getCommentByImage = async (req, res) => {
   res.json(commentWithoutUserPW);
 };
 
-const postComment = async (req, res) => {
+const postComment = async (req, res, next) => {
   const params = [req.body.content, req.body.userId, req.body.imageId];
   console.log('this is params of comment:-',params)
-  const upload = await commentModel.postComment(params);
-  res.send({ message: 'upload ok' });
+  try{
+    const upload = await commentModel.postComment(params);
+    //res.send({ message: 'upload ok' });
+    next();
+  }catch (err) {
+    console.log('Error', err)
+  }
+ 
 };
 
-export { getAllComments, getCommentByImage, postComment };
+const addCommentCount = async (req, res) => {
+  const imageId = req.body.imageId;
+  console.log('imageId:-', imageId)
+  try{
+    const upload = await commentModel.addCommentCount(imageId)
+    res.send({ message: 'comment sucessfully added' });
+  }catch (err) {
+    console.log('Error add comment :-', err)
+  }
+}
+
+export { getAllComments, getCommentByImage, postComment, addCommentCount };

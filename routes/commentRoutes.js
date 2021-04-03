@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.route('/')
 .get(controller.getAllComments)
-.post(controller.postComment)
+.post(controller.postComment, controller.addCommentCount)
 
 router.get('/:id', controller.getCommentByImage);
 

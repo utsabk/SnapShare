@@ -325,19 +325,26 @@ img {
   width: 100%;
   height: 100%;
   color: rgba(0, 0, 0, 0.3);
+  padding: 10px;
 }
 
-.gallery-item-info li {
+.gallery-item-info ul{
+  padding-left: 1rem;
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
+
+}
+
+.gallery-item-info li,
+.gallery-item-info button {
   display: inline-block;
   font-size: 1.7rem;
   font-weight: 600;
-  margin:1rem 0;
+  margin:1rem ;
 
 }
 
-.gallery-item-likes {
-  margin-right: 2.2rem;
-}
+
 
 .fa-clone,
 .fa-comment {
@@ -348,6 +355,9 @@ img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+.comment-section{
+  display: none;
 }
 
 .comment-form{

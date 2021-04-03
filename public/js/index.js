@@ -41,18 +41,23 @@ $(() => {
           <img src="./uploads/${post.imagename}" class="gallery-image" alt="" />
           <div class="gallery-item-info">
             <ul>
+            <button id="like-button">Like</button>
+
             <li class="gallery-item-likes">
                 <span class="visually-hidden">Likes:</span>
                 <i class="fas fa-heart" aria-hidden="true"></i> 
-                <span class="${post.image_id}-likes"></span>
+                <span class="image-index-${i}-likes"></span>
               </li>
+              <button id="comment-button">Comment</button>
 
               <li class="gallery-item-comments">
               <span class="visually-hidden">Comments:</span>
               <i class="fas fa-comment" aria-hidden="true"></i> 
-              <span class="${post.image_id}-comments"></span>
+              <span class="image-index-${i}-comments"></span>
               </li>
+
             </ul>
+            
         </div>
         <div class="comment-section">
         <div id="posted-comments"></div>
@@ -83,11 +88,17 @@ $(() => {
         </div>`
       );
 
+      $(`#image-index-${i} #comment-button`).on('click',(e)=>{
+        $(`#image-index-${i} .comment-section`).slideToggle('slow');
+      })
+
       const populateComments = async (id) => {
         try {
           const response = await fetch(`./comment/${id}`);
           const comments = await response.json();
           createComments(comments);
+
+          
         } catch (err) {
           console.log(err.message);
         }
@@ -99,7 +110,7 @@ $(() => {
           <div class="comment-heading">
               <div class="comment-info">
                 <a href="#" class="comment-author">${comment.username}</a>
-                <p class="m-0"></p>
+                <p id=${comment.comment_id} class="m-0"></p>
             </div>
           </div>
 
@@ -109,9 +120,13 @@ $(() => {
           $(`#image-index-${i} #posted-comments`).append(listItem);
         
         setInterval(()=>{
-        $(`#image-index-${i} .m-0`).html(timeAgo(comment.time_stamp))
+        $(`#image-index-${i} #${comment.comment_id}`).html(timeAgo(comment.time_stamp))
       },1000)
         
+
+      if (comment.comment_count) {
+        $(`.image-index-${i}-comments`).html(comment.comment_count);
+      }
         });
       };
 
@@ -180,7 +195,7 @@ $(() => {
         }
       });
 
-      $('.comment-form').on('submit', async (event) => {
+      $(`#image-index-${i} .comment-form`).on('submit', async (event) => {
         event.preventDefault();
         
         const urlencoded = new URLSearchParams();
@@ -200,7 +215,7 @@ $(() => {
           if (result.message) {
             $(`#image-index-${i} textarea`).val('')
             $(`#image-index-${i} .comment-form button`).attr('disabled', true);
-            populateComments(post.image_id);
+            populateComments(post.image_id);            
           }
         } catch (e) {
           console.log(e.message);
@@ -208,11 +223,9 @@ $(() => {
       });
 
       if (post.like_count) {
-        $(`.${post.image_id}-likes`).append(post.like_count);
+        $(`.image-index-${i}-likes`).append(post.like_count);
       }
-      if (post.comment_count) {
-        $(`.${post.image_id}-comments`).append(post.comment_count);
-      }
+      
 
       //<!--===============================================================================================-->
       /*--- MAP  MODAL  ---*/
