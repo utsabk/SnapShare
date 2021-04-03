@@ -2,6 +2,7 @@
 import express from 'express';
 import * as controller from '../controllers/imageController.js';
 import { uploadDestPost } from '../utils/uploadDest.js';
+import passport from '../utils/pass.js'
 const router = express.Router();
 
 router
@@ -12,6 +13,6 @@ router
 router
   .route('/:id')
   .get(controller.getImageWithID) // get a image with ID
-  .delete(controller.deletePost); // delete a post
+  .delete(passport.authenticate('jwt', {session: false}), controller.deletePost); // delete a post
 
 export default router;

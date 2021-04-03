@@ -58,6 +58,7 @@ $(() => {
       `
       );
 
+      // Each gallery div is assigned with unique id with index number 'image-index-${i}'
       $(`#image-index-${i}`).append(
         `<div id="image-index-${i}-modal" class="modal">
           <span class="close" title="Close Modal">×</span>
@@ -75,6 +76,12 @@ $(() => {
         </div>`
       );
 
+      // Only owner of the post allowed to delete 
+      if(userId == post.owner_id){
+        $(`#image-index-${i} .chip i`).show();
+      }
+
+      // When clicked on the trash icon
       $(`#image-index-${i} .chip i`).on('click', (event) => {
       
           const $modal = $(`#image-index-${i}-modal`);
@@ -94,14 +101,10 @@ $(() => {
 
           $(`#image-index-${i}-modal  .deletebtn`).on('click', async (event) => {
             event.preventDefault();
-
-            const clickTarget = event.target;
-
-            console.log('This is clickTarget', clickTarget);
-            console.log('This is post.image_id}', post.image_id);
-
+            
             const fetchOptions = {
               method: 'DELETE',
+              headers: { 'Authorization':'Bearer ' +localStorage.getItem('token') },
             };
             try {
               const response = await fetch(`./image/${post.image_id}`,fetchOptions)

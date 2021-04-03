@@ -299,6 +299,7 @@ img {
 .chip i {
   float: right;
   padding: 1.5rem;
+  display: none;
 }
 
 .gallery {
