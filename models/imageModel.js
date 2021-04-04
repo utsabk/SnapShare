@@ -53,4 +53,6 @@ const deleteImage = async (id) => {
   }
 };
 
-export { getAllImages, getImageById, postImage,deleteImage };
+
+
+export { getAllImages, getImageById, postImage,deleteImage};

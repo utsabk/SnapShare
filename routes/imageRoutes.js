@@ -1,6 +1,7 @@
 'use strict';
 import express from 'express';
 import * as controller from '../controllers/imageController.js';
+
 import { uploadDestPost } from '../utils/uploadDest.js';
 import passport from '../utils/pass.js'
 const router = express.Router();
@@ -14,5 +15,6 @@ router
   .route('/:id')
   .get(controller.getImageWithID) // get a image with ID
   .delete(passport.authenticate('jwt', {session: false}), controller.deletePost); // delete a post
+
 
 export default router;

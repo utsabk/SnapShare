@@ -1,6 +1,7 @@
 'use strict';
 
 $(() => {
+
   // window makes it a global variable, accisible from any js file
   window.userId = localStorage.getItem('userId');
 
@@ -92,7 +93,20 @@ $(() => {
         $(`#image-index-${i} .comment-section`).slideToggle('slow');
       })
 
-      const populateComments = async (id) => {
+      $(`#image-index-${i} #like-button`).on('click',(e)=>{
+        if($(`#image-index-${i} #like-button`).html() == 'Like'){
+          fetchLikes('POST','add',post.image_id)
+          $(`#image-index-${i} #like-button`).html('Liked')
+          $(`#image-index-${i} #like-button`).css("background-color", "#3675EA");
+        }else{
+          fetchLikes('DELETE','remove',post.image_id)
+          $(`#image-index-${i} #like-button`).html('Like')
+          $(`#image-index-${i} #like-button`).css("background-color", "");
+
+        }
+      })
+
+      const getComments = async (id) => {
         try {
           const response = await fetch(`./comment/${id}`);
           const comments = await response.json();
@@ -103,7 +117,49 @@ $(() => {
           console.log(err.message);
         }
       };
-      const createComments = async(comments) => {
+
+    
+      const getLike = async(imageId)=>{
+        try {
+          const response = await fetch(`./like/${imageId}`);
+          const like = await response.json();
+          if(like.likes_count){
+            $(`.image-index-${i}-likes`).html(like.likes_count);
+          }else{
+            $(`.image-index-${i}-likes`).html('');
+          }
+        } catch (err) {
+          console.log(err.message);
+        }
+      }
+
+      const fetchLikes = async (myMethod,route,imageId) => {
+        var urlencoded = new URLSearchParams();
+        urlencoded.append("userId", userId);
+        urlencoded.append("imageId", imageId);
+        
+        const fetchOptions = {
+          method: myMethod,
+          body: urlencoded,
+          redirect: 'follow'
+        };
+        try {
+          const response = await fetch(`./like/${route}/`,fetchOptions);
+          const like = await response.json();
+          if(like.message){
+            getLike(imageId)
+          }
+          if(like.status){
+            const image = like.status.image_id
+            $(`#image-index-${i} #like-button`).html('Liked')
+            $(`#image-index-${i} #like-button`).css("background-color", "#3675EA");
+          }
+        } catch (err) {
+          console.log(err.message);
+        }
+      }
+
+      const createComments = async (comments) => {
         $(`#image-index-${i} #posted-comments`).html('');
         comments.forEach((comment) => {
           const listItem = `
@@ -118,21 +174,25 @@ $(() => {
               <p> ${comment.content}</p>
             </div>`;
           $(`#image-index-${i} #posted-comments`).append(listItem);
-        
-        setInterval(()=>{
-        $(`#image-index-${i} #${comment.comment_id}`).html(timeAgo(comment.time_stamp))
-      },1000)
-        
 
-      if (comment.comment_count) {
-        $(`.image-index-${i}-comments`).html(comment.comment_count);
-      }
+          setInterval(() => {
+            $(`#image-index-${i} #${comment.comment_id}`).html(
+              timeAgo(comment.time_stamp)
+            );
+          }, 1000);
+
+          if (comment.comment_count) {
+            $(`.image-index-${i}-comments`).html(comment.comment_count);
+          }
         });
       };
 
       
 
-      populateComments(post.image_id);
+      getComments(post.image_id);
+      getLike(post.image_id);
+      fetchLikes('POST','status',post.image_id);
+
       // Only owner of the post allowed to delete
       if (userId == post.owner_id) {
         $(`#image-index-${i} .chip i`).show();
@@ -215,16 +275,14 @@ $(() => {
           if (result.message) {
             $(`#image-index-${i} textarea`).val('')
             $(`#image-index-${i} .comment-form button`).attr('disabled', true);
-            populateComments(post.image_id);            
+            getComments(post.image_id);
           }
         } catch (e) {
           console.log(e.message);
         }
       });
 
-      if (post.like_count) {
-        $(`.image-index-${i}-likes`).append(post.like_count);
-      }
+      
       
 
       //<!--===============================================================================================-->

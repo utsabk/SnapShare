@@ -63,3 +63,30 @@ INSERT INTO `comment` (`content`,`user_id`,`image_id`) VALUES
 ('Beautiful !!', 12, 68);
 
 <!--===============================================================================================-->
+
+
+<!--===============================================================================================-->
+CREATE TABLE `likes` (
+  `like_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `image_id` int(11) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+ALTER TABLE `likes`
+  ADD PRIMARY KEY (`like_id`);
+
+ALTER TABLE `likes`
+  MODIFY `like_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+ALTER TABLE `likes`
+  ADD UNIQUE INDEX (`user_id`, `image_id`);
+
+INSERT IGNORE INTO `likes` (`user_id`,`image_id`) VALUES
+( 13, 70),
+( 14, 72);
+
+// if the record is a duplicate, then the IGNORE keyword tells MySQL to discard it silently without generating an error.
+
+
+
+<!--===============================================================================================-->

@@ -28,7 +28,7 @@ const deletePost = async (req, res) => {
   try {
     const id = req.params.id;
     const del = await model.deleteImage(id);
-    res.json({ status: 'sucessfully delete'});
+    res.json({ status: 'sucessfully delete' });
   } catch (err) {
     console.log('Error deletePost:-', err);
   }
