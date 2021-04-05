@@ -14,6 +14,12 @@ const getImageWithID = async (req, res) => {
   res.json(image);
 };
 
+const getTotalPostsByUser = async (req, res) => {
+  const id = req.params.userId;
+  const [posts] = await model.getTotalPostsByUser(id);
+  res.json(posts);
+};
+
 const uploadImage = async (req, res) => {
   try {
     const data = [req.file.filename, req.body.ownerId];
@@ -34,4 +40,10 @@ const deletePost = async (req, res) => {
   }
 };
 
-export { getImagesList, getImageWithID, uploadImage, deletePost };
+export {
+  getImagesList,
+  getImageWithID,
+  uploadImage,
+  deletePost,
+  getTotalPostsByUser,
+};

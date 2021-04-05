@@ -23,6 +23,18 @@ const getCommentsOfAnImage = async (imageId) => {
   }
 };
 
+const getTotalCommentsByUser = async (userId) => {
+  try{
+    const [rows] = await promisePool.execute(
+      'SELECT count(*) as count FROM `comment`  JOIN `image` ON comment.image_id = image.image_id WHERE `owner_id` = ?;',
+      [userId]
+    )
+    return rows;
+  }catch (e){
+    console.log(e.message);
+  }
+}
+
 const postComment = async (param) => {
   try {
     const [rows] = await promisePool.execute(
@@ -48,4 +60,4 @@ const addCommentCount = async(imageId) =>{
   }
 }
 
-export { getCommentsList, getCommentsOfAnImage, postComment, addCommentCount};
+export { getCommentsList, getCommentsOfAnImage,getTotalCommentsByUser, postComment, addCommentCount};

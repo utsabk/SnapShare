@@ -13,6 +13,16 @@ const getCommentByImage = async (req, res) => {
   res.json(commentWithoutUserPW);
 };
 
+const getCommentByUser = async (req, res) => {
+  try {
+    const id = req.params.userId;
+    const [totalComments] = await commentModel.getTotalCommentsByUser(id);
+    res.json(totalComments);
+  } catch (err) {
+    console.log('Error get comments by user :-', err);
+  }
+};
+
 const postComment = async (req, res, next) => {
   const params = [req.body.content, req.body.userId, req.body.imageId];
   console.log('this is params of comment:-',params)
@@ -37,4 +47,4 @@ const addCommentCount = async (req, res) => {
   }
 }
 
-export { getAllComments, getCommentByImage, postComment, addCommentCount };
+export { getAllComments, getCommentByImage, getCommentByUser, postComment, addCommentCount };

@@ -1,15 +1,25 @@
 'use strict';
 import * as model from '../models/likeModel.js';
 
-const getLikes = async (req, res) => {
+const getLikesByImage = async (req, res) => {
   try {
     const id = req.params.imageId;
-    const [totalLikes] = await model.getTotalLikes(id);
+    const [totalLikes] = await model.getTotalLikesByImage(id);
     res.json(totalLikes);
   } catch (err) {
-    console.log('Error get likes :-', err);
+    console.log('Error get likes by image :-', err);
   }
 };
+
+const getLikesByUser = async (req, res) => {
+    try {
+      const id = req.params.userId;
+      const [totalLikes] = await model.getTotalLikesByUser(id);
+      res.json(totalLikes);
+    } catch (err) {
+      console.log('Error get likes by user :-', err);
+    }
+  };
 
 const addALike = async (req, res) => {
   try {
@@ -45,4 +55,4 @@ const likeStatus = async (req, res) => {
   }
 };
 
-export { addALike, deleteLike, getLikes, likeStatus };
+export { addALike, deleteLike, getLikesByImage, getLikesByUser, likeStatus };

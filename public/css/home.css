@@ -432,7 +432,7 @@ img {
   }
 }
 
-@media screen and (max-width: 100rem) {
+@media screen and (max-width: 80rem) {
   .container {
     position: relative !important;
   }

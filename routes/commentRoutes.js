@@ -8,5 +8,7 @@ router.route('/')
 .post(controller.postComment, controller.addCommentCount)
 
 router.get('/:id', controller.getCommentByImage);
+router.get('/user/:userId', controller.getCommentByUser)
+
 
 export default router;

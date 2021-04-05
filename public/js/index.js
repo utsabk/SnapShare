@@ -27,6 +27,28 @@ $(() => {
   }
   // populate profile databse
 
+  const fetchProfileStatCount = async (id, route) => {
+    try {
+      const response = await fetch(`./${route}/user/${id}`);
+      const result = await response.json();
+      if (result) {
+        console.log('this is log:-',result.count)
+        $(`.profile-stats #${route}`).html(result.count)
+        //return result.count;
+      }
+    } catch (err) {
+      console.log(err.message);
+    }
+  };
+
+  fetchProfileStatCount(userId,'image')
+  fetchProfileStatCount(userId,'like');
+  fetchProfileStatCount(userId,'comment');
+
+
+
+
+
   const createPostCards = (posts) => {
     $('.gallery').html('');
     posts.forEach((post, i) => {
@@ -111,6 +133,8 @@ $(() => {
           const response = await fetch(`./comment/${id}`);
           const comments = await response.json();
           createComments(comments);
+          fetchProfileStatCount(userId,'comment');
+
 
           
         } catch (err) {
@@ -148,6 +172,7 @@ $(() => {
           const like = await response.json();
           if(like.message){
             getLike(imageId)
+            fetchProfileStatCount(userId,'like');
           }
           if(like.status){
             const image = like.status.image_id
@@ -232,6 +257,10 @@ $(() => {
             const json = await response.json();
             console.log('delete response', json);
             populateImages();
+            fetchProfileStatCount(userId,'image');
+            fetchProfileStatCount(userId,'like');
+            fetchProfileStatCount(userId,'comment');
+
           } catch (err) {
             console.log(err.message);
           }
@@ -337,6 +366,7 @@ $(() => {
       $('#fileLabel').text('Upload');
       $('.upload-form').trigger('reset');
       populateImages();
+      fetchProfileStatCount(userId,'image');
     }
   });
 

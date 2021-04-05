@@ -24,8 +24,19 @@ const getImageById = async (id) => {
       id,
     ]);
     return rows;
-  } catch (e) {
-    console.log('Error getImageById:-', e);
+  } catch (err) {
+    console.log('Error getImageById:-', err);
+  }
+};
+
+const getTotalPostsByUser = async (user) => {
+  try{
+    const [rows] = await promisePool.execute(
+      'SELECT `owner_id`,count(*) as count FROM `image` WHERE `owner_id`=?', 
+      [user])
+    return rows;
+  }catch (err){
+    console.log('Error getTotalPostsByUser:-', err);
   }
 };
 
@@ -44,15 +55,15 @@ const postImage = async (data) => {
 
 const deleteImage = async (id) => {
   try {
-    const [rows] = await promisePool.execute('DELETE FROM `image` WHERE `image_id`=?', 
-    [id]
-    );
+    const [
+      rows,
+    ] = await promisePool.execute('DELETE FROM `image` WHERE `image_id`=?', [
+      id,
+    ]);
     return rows;
   } catch (err) {
     console.log('Error deleteimage:', err);
   }
 };
 
-
-
-export { getAllImages, getImageById, postImage,deleteImage};
+export { getAllImages, getImageById, postImage, deleteImage, getTotalPostsByUser };
