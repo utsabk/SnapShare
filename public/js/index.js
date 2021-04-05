@@ -1,7 +1,6 @@
 'use strict';
 
 $(() => {
-
   // window makes it a global variable, accisible from any js file
   window.userId = localStorage.getItem('userId');
 
@@ -32,8 +31,7 @@ $(() => {
       const response = await fetch(`./${route}/user/${id}`);
       const result = await response.json();
       if (result) {
-        console.log('this is log:-',result.count)
-        $(`.profile-stats #${route}`).html(result.count)
+        $(`.profile-stats #${route}`).html(result.count);
         //return result.count;
       }
     } catch (err) {
@@ -41,13 +39,9 @@ $(() => {
     }
   };
 
-  fetchProfileStatCount(userId,'image')
-  fetchProfileStatCount(userId,'like');
-  fetchProfileStatCount(userId,'comment');
-
-
-
-
+  fetchProfileStatCount(userId, 'image');
+  fetchProfileStatCount(userId, 'like');
+  fetchProfileStatCount(userId, 'comment');
 
   const createPostCards = (posts) => {
     $('.gallery').html('');
@@ -111,83 +105,85 @@ $(() => {
         </div>`
       );
 
-      $(`#image-index-${i} #comment-button`).on('click',(e)=>{
+      $(`#image-index-${i} #comment-button`).on('click', (e) => {
         $(`#image-index-${i} .comment-section`).slideToggle('slow');
-      })
+      });
 
-      $(`#image-index-${i} #like-button`).on('click',(e)=>{
-        if($(`#image-index-${i} #like-button`).html() == 'Like'){
-          fetchLikes('POST','add',post.image_id)
-          $(`#image-index-${i} #like-button`).html('Liked')
-          $(`#image-index-${i} #like-button`).css("background-color", "#3675EA");
-        }else{
-          fetchLikes('DELETE','remove',post.image_id)
-          $(`#image-index-${i} #like-button`).html('Like')
-          $(`#image-index-${i} #like-button`).css("background-color", "");
-
+      $(`#image-index-${i} #like-button`).on('click', (e) => {
+        if ($(`#image-index-${i} #like-button`).html() == 'Like') {
+          fetchLikes('POST', 'add', post.image_id);
+          $(`#image-index-${i} #like-button`).html('Liked');
+          $(`#image-index-${i} #like-button`).css(
+            'background-color',
+            '#3675EA'
+          );
+        } else {
+          fetchLikes('DELETE', 'remove', post.image_id);
+          $(`#image-index-${i} #like-button`).html('Like');
+          $(`#image-index-${i} #like-button`).css('background-color', '');
         }
-      })
+      });
 
       const getComments = async (id) => {
         try {
           const response = await fetch(`./comment/${id}`);
           const comments = await response.json();
           createComments(comments);
-          fetchProfileStatCount(userId,'comment');
-
-
-          
+          fetchProfileStatCount(userId, 'comment');
         } catch (err) {
           console.log(err.message);
         }
       };
 
-    
-      const getLike = async(imageId)=>{
+      const getLike = async (imageId) => {
         try {
           const response = await fetch(`./like/${imageId}`);
           const like = await response.json();
-          if(like.likes_count){
+          if (like.likes_count) {
             $(`.image-index-${i}-likes`).html(like.likes_count);
-          }else{
+          } else {
             $(`.image-index-${i}-likes`).html('');
           }
         } catch (err) {
           console.log(err.message);
         }
-      }
+      };
 
-      const fetchLikes = async (myMethod,route,imageId) => {
+      const fetchLikes = async (myMethod, route, imageId) => {
         var urlencoded = new URLSearchParams();
-        urlencoded.append("userId", userId);
-        urlencoded.append("imageId", imageId);
-        
+        urlencoded.append('userId', userId);
+        urlencoded.append('imageId', imageId);
+
         const fetchOptions = {
           method: myMethod,
           body: urlencoded,
-          redirect: 'follow'
+          redirect: 'follow',
         };
         try {
-          const response = await fetch(`./like/${route}/`,fetchOptions);
+          const response = await fetch(`./like/${route}/`, fetchOptions);
           const like = await response.json();
-          if(like.message){
-            getLike(imageId)
-            fetchProfileStatCount(userId,'like');
+          if (like.message) {
+            getLike(imageId);
+            fetchProfileStatCount(userId, 'like');
           }
-          if(like.status){
-            const image = like.status.image_id
-            $(`#image-index-${i} #like-button`).html('Liked')
-            $(`#image-index-${i} #like-button`).css("background-color", "#3675EA");
+          if (like.status) {
+            const image = like.status.image_id;
+            $(`#image-index-${i} #like-button`).html('Liked');
+            $(`#image-index-${i} #like-button`).css(
+              'background-color',
+              '#3675EA'
+            );
           }
         } catch (err) {
           console.log(err.message);
         }
-      }
+      };
 
       const createComments = async (comments) => {
         $(`#image-index-${i} #posted-comments`).html('');
+        const comments_count = comments.filter(comment => comment.image_id == post.image_id).length;
         comments.forEach((comment) => {
-          const listItem = `
+                    const listItem = `
           <div class="comment-heading">
               <div class="comment-info">
                 <a href="#" class="comment-author">${comment.username}</a>
@@ -206,17 +202,15 @@ $(() => {
             );
           }, 1000);
 
-          if (comment.comment_count) {
-            $(`.image-index-${i}-comments`).html(comment.comment_count);
+          if (comments_count) {
+            $(`.image-index-${i}-comments`).html(comments_count);
           }
         });
       };
 
-      
-
       getComments(post.image_id);
       getLike(post.image_id);
-      fetchLikes('POST','status',post.image_id);
+      fetchLikes('POST', 'status', post.image_id);
 
       // Only owner of the post allowed to delete
       if (userId == post.owner_id) {
@@ -257,10 +251,9 @@ $(() => {
             const json = await response.json();
             console.log('delete response', json);
             populateImages();
-            fetchProfileStatCount(userId,'image');
-            fetchProfileStatCount(userId,'like');
-            fetchProfileStatCount(userId,'comment');
-
+            fetchProfileStatCount(userId, 'image');
+            fetchProfileStatCount(userId, 'like');
+            fetchProfileStatCount(userId, 'comment');
           } catch (err) {
             console.log(err.message);
           }
@@ -286,23 +279,23 @@ $(() => {
 
       $(`#image-index-${i} .comment-form`).on('submit', async (event) => {
         event.preventDefault();
-        
+
         const urlencoded = new URLSearchParams();
-        urlencoded.append("content", $(`#image-index-${i} textarea`).val());
-        urlencoded.append("userId", userId);
-        urlencoded.append("imageId", post.image_id);
-        
+        urlencoded.append('content', $(`#image-index-${i} textarea`).val());
+        urlencoded.append('userId', userId);
+        urlencoded.append('imageId', post.image_id);
+
         const requestOptions = {
           method: 'POST',
           body: urlencoded,
-          redirect: 'follow'
+          redirect: 'follow',
         };
 
         try {
           const response = await fetch('./comment/', requestOptions);
           const result = await response.json();
           if (result.message) {
-            $(`#image-index-${i} textarea`).val('')
+            $(`#image-index-${i} textarea`).val('');
             $(`#image-index-${i} .comment-form button`).attr('disabled', true);
             getComments(post.image_id);
           }
@@ -310,9 +303,6 @@ $(() => {
           console.log(e.message);
         }
       });
-
-      
-      
 
       //<!--===============================================================================================-->
       /*--- MAP  MODAL  ---*/
@@ -366,7 +356,7 @@ $(() => {
       $('#fileLabel').text('Upload');
       $('.upload-form').trigger('reset');
       populateImages();
-      fetchProfileStatCount(userId,'image');
+      fetchProfileStatCount(userId, 'image');
     }
   });
 

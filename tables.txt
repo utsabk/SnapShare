@@ -42,6 +42,12 @@ ALTER TABLE `user`
 ALTER TABLE `user`
   MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
+ALTER TABLE `user`
+  ADD UNIQUE INDEX (`email`);
+
+ALTER TABLE `user`
+  ADD UNIQUE INDEX (`username`);
+
 INSERT INTO `user` (`username`, `email`, `password`) VALUES
 ('John Doe', 'john@metropolia.fi', '1234'),
 ('Jane Doez', 'jane@metropolia.fi', 'qwer');

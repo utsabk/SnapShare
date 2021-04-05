@@ -1,7 +1,7 @@
 'use strict';
 import jwt from 'jsonwebtoken';
-import passport from '../utils/pass.js';
 import bcrypt from 'bcryptjs';
+import passport from '../utils/pass.js';
 import { uploadUserData } from '../models/userModel.js';
 
 const authenticate = (req, res) => {
@@ -43,7 +43,7 @@ const userLogin = async (req, res) => {
 const userRegister = async (req, res, next) => {
   const hash = await bcrypt.hash(
     req.body.password,
-    Number(process.env.SALT_ROUNDS)   //SALT_ROUNDS converted to a number
+    Number(process.env.SALT_ROUNDS) //SALT_ROUNDS converted to a number
   );
 
   const params = [req.body.username, req.body.email, hash];

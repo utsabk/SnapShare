@@ -48,16 +48,5 @@ const postComment = async (param) => {
   }
 };
 
-const addCommentCount = async(imageId) =>{
-  try{
-    const [rows] = await promisePool.execute(
-      'UPDATE `image` SET `comment_count` = `comment_count` + 1 WHERE `image_id` = ?;',
-      [imageId]
-    )
-    return rows;
-  }catch (e){
-    console.log(e.message);
-  }
-}
 
-export { getCommentsList, getCommentsOfAnImage,getTotalCommentsByUser, postComment, addCommentCount};
+export { getCommentsList, getCommentsOfAnImage,getTotalCommentsByUser, postComment};

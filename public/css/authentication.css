@@ -89,12 +89,20 @@ iframe {
     color: #999999;
   }
   
-  .txt2 {
+.txt2 {
     font-family: Poppins-Regular;
     font-size: 13px;
     line-height: 1.5;
     color: #666666;
   }
+
+
+.error {
+	color: #ba3939;
+  background: #ffe0e0;
+  border: 1px solid #a33a3a;
+}
+
   /*//////////////////////////////////////////////////////////////////
 [ login ]*/
 
@@ -219,6 +227,10 @@ iframe {
   .input100:focus + .focus-input100 {
     -webkit-animation: anim-shadow 0.5s ease-in-out forwards;
     animation: anim-shadow 0.5s ease-in-out forwards;
+  }
+  
+  #signUpForm{
+    display: none;
   }
   
   @-webkit-keyframes anim-shadow {

@@ -12,14 +12,14 @@ const getLikesByImage = async (req, res) => {
 };
 
 const getLikesByUser = async (req, res) => {
-    try {
-      const id = req.params.userId;
-      const [totalLikes] = await model.getTotalLikesByUser(id);
-      res.json(totalLikes);
-    } catch (err) {
-      console.log('Error get likes by user :-', err);
-    }
-  };
+  try {
+    const id = req.params.userId;
+    const [totalLikes] = await model.getTotalLikesByUser(id);
+    res.json(totalLikes);
+  } catch (err) {
+    console.log('Error get likes by user :-', err);
+  }
+};
 
 const addALike = async (req, res) => {
   try {

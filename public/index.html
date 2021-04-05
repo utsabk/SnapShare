@@ -12,6 +12,7 @@
     rel="stylesheet"
   />
 
+  <!-- <header start> ===============================================================================================-->
   <header>
     <div class="header">
       <span class="logo">SnapShare</span>
@@ -24,13 +25,13 @@
       </div>
 
       <div class="signin">
-        <a id="SignInBtn" href="./signin.html">
+        <a id="SignInBtn" href="./auth.html">
           <span id="userIcon" class="fas fa-user" aria-hidden="true"></span>
           <span>Sign In</span>
         </a>
       </div>
 
-      <!-- <form> -->
+      <!-- <upload image form> -->
 
       <form class="upload-form" enctype="multipart/form-data">
         <label id="fileLabel" for="fileInput"> Upload </label>
@@ -46,8 +47,10 @@
       </form>
     </div>
   </header>
+  <!-- <header end> ===============================================================================================-->
 
   <main>
+    <!-- Start of profile section -->
     <div class="container">
       <div class="profile">
         <a id="profile-picture" aria-label="Change Profile Picture">
@@ -75,6 +78,7 @@
             <i class="fas fa-sign-out-alt" aria-hidden="true"></i>
           </button>
 
+          <!-- Start of logout dialog-->
           <div id="id01" class="modal">
             <span class="close" title="Close Modal">×</span>
             <form class="modal-content">
@@ -89,7 +93,7 @@
               </div>
             </form>
           </div>
-
+          <!-- End of logout dialog-->
 
         </div>
 
@@ -120,7 +124,6 @@
 
       <!-- <div class="loader"></div> -->
     </div>
-
     <!-- End of container -->
   </main>
 

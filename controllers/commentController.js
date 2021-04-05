@@ -8,8 +8,10 @@ const getAllComments = async (req, res) => {
 const getCommentByImage = async (req, res) => {
   const imageId = req.params.id;
   const comments = await commentModel.getCommentsOfAnImage(imageId);
-    // Rest in Object Destructuring to get all the properties except password
-  const commentWithoutUserPW = comments.map(({ password,...comments})=>comments)
+  // Rest in Object Destructuring to get all the properties except password
+  const commentWithoutUserPW = comments.map(
+    ({ password, ...comments }) => comments
+  );
   res.json(commentWithoutUserPW);
 };
 
@@ -25,26 +27,18 @@ const getCommentByUser = async (req, res) => {
 
 const postComment = async (req, res, next) => {
   const params = [req.body.content, req.body.userId, req.body.imageId];
-  console.log('this is params of comment:-',params)
-  try{
+  try {
     const upload = await commentModel.postComment(params);
-    //res.send({ message: 'upload ok' });
-    next();
-  }catch (err) {
-    console.log('Error', err)
+    res.send({ message: 'upload ok' }); 
+  } catch (err) {
+    console.log('Error', err);
   }
- 
 };
 
-const addCommentCount = async (req, res) => {
-  const imageId = req.body.imageId;
-  console.log('imageId:-', imageId)
-  try{
-    const upload = await commentModel.addCommentCount(imageId)
-    res.send({ message: 'comment sucessfully added' });
-  }catch (err) {
-    console.log('Error add comment :-', err)
-  }
-}
 
-export { getAllComments, getCommentByImage, getCommentByUser, postComment, addCommentCount };
+export {
+  getAllComments,
+  getCommentByImage,
+  getCommentByUser,
+  postComment,
+};

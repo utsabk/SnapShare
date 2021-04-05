@@ -34,10 +34,22 @@ const getUserWithEmail = async (email) => {
   }
 };
 
+const getUserWithUsername = async (username) => {
+  try {
+    const [rows] = await promisePool.execute('SELECT * FROM `user` WHERE `username` =?', [
+      username,
+    ]); // Values should pass as array
+    return rows;
+  } catch (e) {
+    consol.log('Error getUserWithUsername:-', e);
+  }
+};
+
+
 const uploadUserData = async (params) => {
   try {
     const [rows] = await promisePool.execute(
-      'INSERT INTO `user` (`username`, `email`, `password`) VALUES (?, ?, ?);',
+      'INSERT IGNORE INTO `user` (`username`, `email`, `password`) VALUES (?, ?, ?);',
       params // Arg are passed as an array
     );
     return rows;
@@ -59,4 +71,4 @@ const postProfile = async(data)=>{
   }
 }
 
-export { getUsersList, getUserWithId, getUserWithEmail, uploadUserData, postProfile };
+export { getUsersList, getUserWithId, getUserWithEmail, uploadUserData, postProfile, getUserWithUsername };
