@@ -7,7 +7,13 @@ $(() => {
  const populateProfile = async (id) => {
     const user = await myCustomFetch('./user/' + id);
     if (user.user_id) {
-      $('.profile-image').css('background-image', `url(./profiles/${user.dp})`);
+      // Check if user profile exits
+      if(user.dp){
+        $('.profile-image').css('background-image', `url(./profiles/${user.dp})`);
+      }else{
+        $('.profile-image').css('background-image', 'url(./images/logo.png)');
+      }
+
       $('.profile-user-name').text(user.username);
     }
   };

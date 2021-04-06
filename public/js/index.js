@@ -5,64 +5,69 @@ import {
   userToken,
   fetchProfileStatCount,
   myCustomFetch,
+  timeAgo,
+  updateTimeInterval
 } from '../js/main.js';
 
 $(() => {
-  // window makes it a global variable, accisible from any js file
 
-  //<! Start of post card--===============================================================================================-->
+  //<! HTML for Post info--===============================================================================================-->
 
-  const postData = `
-  <div class="gallery-item-info">
-    <ul>
+  const postData = 
+   `<div class="gallery-item-info">
+      <ul>
 
-      <li class="gallery-item-likes">
-        <button id="like-button">Like</button>
-        <span class="visually-hidden">Likes:</span>
-        <i class="fas fa-heart" aria-hidden="true"></i> 
-        <span id="likes-count"></span>
-      </li>
+        <li class="gallery-item-likes">
+          <button id="like-button">Like</button>
+          <span class="visually-hidden">Likes:</span>
+          <i class="fas fa-heart" aria-hidden="true"></i> 
+          <span id="likes-count"></span>
+        </li>
 
-      <li class="gallery-item-comments">
-        <button id="comment-button">Comment</button>
-        <span class="visually-hidden">Comments:</span>
-        <i class="fas fa-comment" aria-hidden="true"></i> 
-        <span id="comments-count"></span>
-      </li>
+        <li class="gallery-item-comments">
+          <button id="comment-button">Comment</button>
+          <span class="visually-hidden">Comments:</span>
+          <i class="fas fa-comment" aria-hidden="true"></i> 
+          <span id="comments-count"></span>
+        </li>
 
-    </ul>
-          
-    </div>
+        <p class="m-0"></p>
 
-    <div class="comment-section">
-      <div id="posted-comments"></div>
-      <form class="comment-form" method="POST">
-        <textarea aria-label="Add a comment…" placeholder="Add a comment…" ></textarea>
-        <button type="submit" disabled="">Post</button>
-      </form>
-    </div>
-
-    <div class="modal">
-      <span class="close" title="Close Modal">×</span>
-      <form class="modal-content">
-        <div class="container"> 
-          <h1>Delete</h1>
-          <p>Are you sure you want to Delete?</p>
+      </ul>
         
-          <div class="clearfix">
-            <button class="cancelbtn">Cancel</button>
-            <button class="deletebtn">Delete</button>
+      </div>
+
+      <div class="comment-section">
+        <div id="posted-comments"></div>
+        <form class="comment-form" method="POST">
+          <textarea aria-label="Add a comment…" placeholder="Add a comment…" ></textarea>
+          <button type="submit" disabled="">Post</button>
+        </form>
+      </div>
+
+      <div class="modal">
+        <span class="close" title="Close Modal">×</span>
+        <form class="modal-content">
+          <div class="container"> 
+            <h1>Delete</h1>
+            <p>Are you sure you want to Delete?</p>
+          
+            <div class="clearfix">
+              <button class="cancelbtn">Cancel</button>
+              <button class="deletebtn">Delete</button>
+            </div>
           </div>
-        </div>
-      </form>
-    </div>
-  </div>`;
+        </form>
+      </div>
+    </div>`
+  
 
   //Populate each cards
   const createPostCards = (posts) => {
     $('.gallery').html('');
     posts.forEach((post, i) => {
       $('.gallery').append(
+
         // Each gallery div is assigned with unique id with index number 'image-index-${i}'
         `<div id="image-index-${i}" class="gallery-item" tabindex="0">
          
@@ -80,6 +85,7 @@ $(() => {
         </div>`
       );
 
+
       const $imageWithIndex = `#image-index-${i}`;
       const $galleryItemInfo = `${$imageWithIndex} .gallery-item-info`;
       const $commentSection = `${$imageWithIndex} .comment-section`;
@@ -88,7 +94,15 @@ $(() => {
       const $commentBtn = $(`${$galleryItemInfo} #comment-button`);
       const $postedComments = `${$commentSection} #posted-comments`;
       const $commentInputField = `${$commentSection} textarea`;
+     
+      const $postUplodedTime = $(`${$galleryItemInfo} .m-0`);
 
+      // Attach posted time for each post when loded first time
+      $postUplodedTime.html(timeAgo(post.creation_date))
+
+      // Update posted time for each post every timeinterval
+      updateTimeInterval($postUplodedTime, post.creation_date)
+       
       // Like and Comment allowed only when logged in
       if (!userId) {
         $($likeBtn).prop('disabled', true);
@@ -173,9 +187,9 @@ $(() => {
           <div class="comment-heading">
               <div class="comment-info">
                 <a href="#" class="comment-author">${comment.username}</a>
-                <p id=${comment.comment_id} class="m-0">${timeAgo(
-            comment.time_stamp
-          )}</p>
+                <p id=${comment.comment_id} class="m-0">
+                ${timeAgo(comment.time_stamp)}
+                </p>
             </div>
           </div>
 
@@ -184,19 +198,18 @@ $(() => {
             </div>`;
           $($postedComments).append(listItem);
 
-          if (timeAgo(comment.time_stamp))
-            // Update comment's time every 5 seconds
-            setInterval(() => {
-              $(`${$imageWithIndex} .m-0`).each((index, element) => {
-                if (element.id == comment.comment_id) {
-                  $(element).html(timeAgo(comment.time_stamp));
-                }
-              });
-            }, 5000);
+          // update time for each comment
+          $(`${$postedComments} .m-0`).each((index, element) => {
+            if (element.id == comment.comment_id) {
+              updateTimeInterval($(element),comment.time_stamp)
+            }
+          });
 
+          // If more than one comment update comment element
           if (comments_count) {
             $(`${$imageWithIndex} #comments-count`).html(comments_count);
           }
+
         });
       };
 
@@ -340,51 +353,5 @@ $(() => {
       fetchProfileStatCount(userId, 'image');
     }
   });
-
-  // Function to disply time ago in each comments
-  const timeAgo = (time) => {
-    let result;
-    if (typeof time === 'string') {
-      time = Date.parse(time);
-    }
-    const difference = Date.now() - time;
-
-    if (difference < 5 * 1000) {
-      return 'just now';
-    } else if (difference < 90 * 1000) {
-      return 'moments ago';
-    }
-
-    //it has minutes
-    if ((difference % 1000) * 3600 > 0) {
-      if (Math.floor((difference / 1000 / 60) % 60) > 0) {
-        let s = Math.floor((difference / 1000 / 60) % 60) == 1 ? '' : 's';
-        result = `${Math.floor((difference / 1000 / 60) % 60)} minute${s} `;
-      }
-    }
-
-    //it has hours
-    if ((difference % 1000) * 3600 * 60 > 0) {
-      if (Math.floor((difference / 1000 / 60 / 60) % 24) > 0) {
-        let s = Math.floor((difference / 1000 / 60 / 60) % 24) == 1 ? '' : 's';
-        result =
-          `${Math.floor((difference / 1000 / 60 / 60) % 24)} hour${s}${
-            result == '' ? '' : ','
-          } ` + result;
-      }
-    }
-
-    //it has days
-    if ((difference % 1000) * 3600 * 60 * 24 > 0) {
-      if (Math.floor(difference / 1000 / 60 / 60 / 24) > 0) {
-        let s = Math.floor(difference / 1000 / 60 / 60 / 24) == 1 ? '' : 's';
-        result =
-          `${Math.floor(difference / 1000 / 60 / 60 / 24)} day${s}${
-            result == '' ? '' : ','
-          } ` + result;
-      }
-    }
-
-    return result + ' ago';
-  };
+ 
 });

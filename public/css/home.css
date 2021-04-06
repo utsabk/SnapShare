@@ -85,7 +85,6 @@ img {
   color: transparent;
   transition: all .3s ease;
   font-family: 'FontAwesome';
-  background-image: url('../images/logo.png')
 }
   
 .profile-image:hover {
@@ -338,6 +337,13 @@ img {
   display: inline-block;
   font-size: 1.7rem;
   font-weight: 600;
+  margin:1rem ;
+}
+
+.gallery-item-info .m-0{
+  float: right;
+  font-size: 1.2rem;
+  font-weight: 300;
   margin:1rem ;
 }
 
