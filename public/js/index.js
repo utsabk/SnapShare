@@ -1,154 +1,144 @@
 'use strict';
 
+import {
+  userId,
+  userToken,
+  fetchProfileStatCount,
+  myCustomFetch,
+} from '../js/main.js';
+
 $(() => {
   // window makes it a global variable, accisible from any js file
-  window.userId = localStorage.getItem('userId');
 
-  window.populateProfile = async (id) => {
-    const response = await fetch('./user/' + id);
-    const user = await response.json();
-    if (user) {
-      $('.profile-image').css('background-image', `url(./profiles/${user.dp})`);
-      $('.profile-user-name').text(user.username);
-    }
-  };
+  //<! Start of post card--===============================================================================================-->
 
-  // remove signin button if loggedin
-  if (userId) {
-    $('.profile').show();
-    $('.signin').hide();
-    populateProfile(userId);
-  }
-  // remove upload button if not loggedin
-  if (!userId) {
-    $('.upload-form').hide();
-    $('.profile').hide();
-  }
-  // populate profile databse
+  const postData = `
+  <div class="gallery-item-info">
+    <ul>
 
-  const fetchProfileStatCount = async (id, route) => {
-    try {
-      const response = await fetch(`./${route}/user/${id}`);
-      const result = await response.json();
-      if (result) {
-        $(`.profile-stats #${route}`).html(result.count);
-        //return result.count;
-      }
-    } catch (err) {
-      console.log(err.message);
-    }
-  };
+      <li class="gallery-item-likes">
+        <button id="like-button">Like</button>
+        <span class="visually-hidden">Likes:</span>
+        <i class="fas fa-heart" aria-hidden="true"></i> 
+        <span id="likes-count"></span>
+      </li>
 
-  fetchProfileStatCount(userId, 'image');
-  fetchProfileStatCount(userId, 'like');
-  fetchProfileStatCount(userId, 'comment');
+      <li class="gallery-item-comments">
+        <button id="comment-button">Comment</button>
+        <span class="visually-hidden">Comments:</span>
+        <i class="fas fa-comment" aria-hidden="true"></i> 
+        <span id="comments-count"></span>
+      </li>
 
+    </ul>
+          
+    </div>
+
+    <div class="comment-section">
+      <div id="posted-comments"></div>
+      <form class="comment-form" method="POST">
+        <textarea aria-label="Add a comment…" placeholder="Add a comment…" ></textarea>
+        <button type="submit" disabled="">Post</button>
+      </form>
+    </div>
+
+    <div class="modal">
+      <span class="close" title="Close Modal">×</span>
+      <form class="modal-content">
+        <div class="container"> 
+          <h1>Delete</h1>
+          <p>Are you sure you want to Delete?</p>
+        
+          <div class="clearfix">
+            <button class="cancelbtn">Cancel</button>
+            <button class="deletebtn">Delete</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>`;
+
+  //Populate each cards
   const createPostCards = (posts) => {
     $('.gallery').html('');
     posts.forEach((post, i) => {
       $('.gallery').append(
+        // Each gallery div is assigned with unique id with index number 'image-index-${i}'
         `<div id="image-index-${i}" class="gallery-item" tabindex="0">
+         
           <div class="chip">
             <img src="./profiles/${post.dp}"  alt="Person" width="96" height="96">
             ${post.username}
-            <i class="fa fa-trash" aria-hidden="true"></i>
+            <i  id="trash" class="fa fa-trash" aria-hidden="true"></i>
           </div>
 
 
           <img src="./uploads/${post.imagename}" class="gallery-image" alt="" />
-          <div class="gallery-item-info">
-            <ul>
-            <button id="like-button">Like</button>
+          
+          ${postData}
 
-            <li class="gallery-item-likes">
-                <span class="visually-hidden">Likes:</span>
-                <i class="fas fa-heart" aria-hidden="true"></i> 
-                <span class="image-index-${i}-likes"></span>
-              </li>
-              <button id="comment-button">Comment</button>
-
-              <li class="gallery-item-comments">
-              <span class="visually-hidden">Comments:</span>
-              <i class="fas fa-comment" aria-hidden="true"></i> 
-              <span class="image-index-${i}-comments"></span>
-              </li>
-
-            </ul>
-            
-        </div>
-        <div class="comment-section">
-        <div id="posted-comments"></div>
-          <form class="comment-form" method="POST">
-            <textarea aria-label="Add a comment…" placeholder="Add a comment…" ></textarea>
-            <button type="submit" disabled="">Post</button>
-          </form>
-        </div>
-      </div>
-      `
-      );
-
-      // Each gallery div is assigned with unique id with index number 'image-index-${i}'
-      $(`#image-index-${i}`).append(
-        `<div id="image-index-${i}-modal" class="modal">
-          <span class="close" title="Close Modal">×</span>
-          <form class="modal-content">
-            <div class="container"> 
-              <h1>Delete</h1>
-              <p>Are you sure you want to Delete?</p>
-            
-              <div class="clearfix">
-                <button class="cancelbtn">Cancel</button>
-                <button class="deletebtn">Delete</button>
-              </div>
-            </div>
-          </form>
         </div>`
       );
 
-      $(`#image-index-${i} #comment-button`).on('click', (e) => {
-        $(`#image-index-${i} .comment-section`).slideToggle('slow');
+      const $imageWithIndex = `#image-index-${i}`;
+      const $galleryItemInfo = `${$imageWithIndex} .gallery-item-info`;
+      const $commentSection = `${$imageWithIndex} .comment-section`;
+      const $modal = `${$imageWithIndex} .modal`;
+      const $likeBtn = $(`${$galleryItemInfo} #like-button`);
+      const $commentBtn = $(`${$galleryItemInfo} #comment-button`);
+      const $postedComments = `${$commentSection} #posted-comments`;
+      const $commentInputField = `${$commentSection} textarea`;
+
+      // Like and Comment allowed only when logged in
+      if (!userId) {
+        $($likeBtn).prop('disabled', true);
+        $($commentBtn).prop('disabled', true);
+      } else {
+        $($likeBtn).prop('disabled', false);
+        $($commentBtn).prop('disabled', false);
+      }
+
+      // Only owner of the post allowed to delete
+      if (userId == post.owner_id) {
+        $(`${$imageWithIndex} .chip i`).show();
+      }
+
+      //Slide down & up comment section
+      $commentBtn.on('click', (e) => {
+        $($commentSection).slideToggle('slow');
       });
 
-      $(`#image-index-${i} #like-button`).on('click', (e) => {
-        if ($(`#image-index-${i} #like-button`).html() == 'Like') {
+      // When like button is clicked
+      $likeBtn.on('click', (e) => {
+        if ($likeBtn.html() == 'Like') {
           fetchLikes('POST', 'add', post.image_id);
-          $(`#image-index-${i} #like-button`).html('Liked');
-          $(`#image-index-${i} #like-button`).css(
-            'background-color',
-            '#3675EA'
-          );
+          $likeBtn.html('Liked');
+          $likeBtn.css('background-color', '#3675EA');
         } else {
           fetchLikes('DELETE', 'remove', post.image_id);
-          $(`#image-index-${i} #like-button`).html('Like');
-          $(`#image-index-${i} #like-button`).css('background-color', '');
+          $likeBtn.html('Like');
+          $likeBtn.css('background-color', '');
         }
       });
 
+      // Fetch comments of a post from backend for all users
       const getComments = async (id) => {
-        try {
-          const response = await fetch(`./comment/${id}`);
-          const comments = await response.json();
-          createComments(comments);
-          fetchProfileStatCount(userId, 'comment');
-        } catch (err) {
-          console.log(err.message);
+        const comments = await myCustomFetch(`./comment/${id}`);
+        createComments(comments);
+        fetchProfileStatCount(userId, 'comment');
+      };
+
+      // Fetch likes of a post from backend for all users
+      const getLikes = async (imageId) => {
+        const like = await myCustomFetch(`./like/${imageId}`);
+        if (like.likes_count) {
+          $(`${$imageWithIndex} #likes-count`).html(like.likes_count);
+        } else {
+          $(`${$imageWithIndex} #likes-count`).html('');
         }
       };
 
-      const getLike = async (imageId) => {
-        try {
-          const response = await fetch(`./like/${imageId}`);
-          const like = await response.json();
-          if (like.likes_count) {
-            $(`.image-index-${i}-likes`).html(like.likes_count);
-          } else {
-            $(`.image-index-${i}-likes`).html('');
-          }
-        } catch (err) {
-          console.log(err.message);
-        }
-      };
-
+      // Fetch likes from backend for specific user only (Logged in user)
       const fetchLikes = async (myMethod, route, imageId) => {
         var urlencoded = new URLSearchParams();
         urlencoded.append('userId', userId);
@@ -159,129 +149,121 @@ $(() => {
           body: urlencoded,
           redirect: 'follow',
         };
-        try {
-          const response = await fetch(`./like/${route}/`, fetchOptions);
-          const like = await response.json();
-          if (like.message) {
-            getLike(imageId);
-            fetchProfileStatCount(userId, 'like');
-          }
-          if (like.status) {
-            const image = like.status.image_id;
-            $(`#image-index-${i} #like-button`).html('Liked');
-            $(`#image-index-${i} #like-button`).css(
-              'background-color',
-              '#3675EA'
-            );
-          }
-        } catch (err) {
-          console.log(err.message);
+        const like = await myCustomFetch(`./like/${route}/`, fetchOptions);
+
+        if (like.message) {
+          getLikes(imageId);
+          fetchProfileStatCount(userId, 'like');
+        }
+        if (like.status) {
+          const image = like.status.image_id;
+          $likeBtn.html('Liked');
+          $likeBtn.css('background-color', '#3675EA');
         }
       };
 
+      // Populate comments on each post
       const createComments = async (comments) => {
-        $(`#image-index-${i} #posted-comments`).html('');
-        const comments_count = comments.filter(comment => comment.image_id == post.image_id).length;
+        $($postedComments).html('');
+        const comments_count = comments.filter(
+          (comment) => comment.image_id == post.image_id
+        ).length;
         comments.forEach((comment) => {
-                    const listItem = `
+          const listItem = `
           <div class="comment-heading">
               <div class="comment-info">
                 <a href="#" class="comment-author">${comment.username}</a>
-                <p id=${comment.comment_id} class="m-0"></p>
+                <p id=${comment.comment_id} class="m-0">${timeAgo(
+            comment.time_stamp
+          )}</p>
             </div>
           </div>
 
             <div class="comment-body">
               <p> ${comment.content}</p>
             </div>`;
-          $(`#image-index-${i} #posted-comments`).append(listItem);
+          $($postedComments).append(listItem);
 
-          setInterval(() => {
-            $(`#image-index-${i} #${comment.comment_id}`).html(
-              timeAgo(comment.time_stamp)
-            );
-          }, 1000);
+          if (timeAgo(comment.time_stamp))
+            // Update comment's time every 5 seconds
+            setInterval(() => {
+              $(`${$imageWithIndex} .m-0`).each((index, element) => {
+                if (element.id == comment.comment_id) {
+                  $(element).html(timeAgo(comment.time_stamp));
+                }
+              });
+            }, 5000);
 
           if (comments_count) {
-            $(`.image-index-${i}-comments`).html(comments_count);
+            $(`${$imageWithIndex} #comments-count`).html(comments_count);
           }
         });
       };
 
-      getComments(post.image_id);
-      getLike(post.image_id);
-      fetchLikes('POST', 'status', post.image_id);
-
-      // Only owner of the post allowed to delete
-      if (userId == post.owner_id) {
-        $(`#image-index-${i} .chip i`).show();
-      }
-
       // When clicked on the trash icon
-      $(`#image-index-${i} .chip i`).on('click', (event) => {
-        const $modal = $(`#image-index-${i}-modal`);
+      $(`${$imageWithIndex} #trash`).on('click', (event) => {
+        $($modal).show(); // delete picture modal
 
-        $modal.show();
-
-        $(`#image-index-${i}-modal .close`).on('click', (e) => {
+        $(`${$modal} .close`).on('click', (e) => {
           e.preventDefault();
 
-          $modal.hide();
+          $($modal).hide();
         });
 
-        $(`#image-index-${i}-modal .cancelbtn`).on('click', (event) => {
+        $(`${$modal} .cancelbtn`).on('click', (event) => {
           event.preventDefault();
-          $modal.hide();
+          $($modal).hide();
         });
 
-        $(`#image-index-${i}-modal  .deletebtn`).on('click', async (event) => {
+        // When trash icon is presse, DELETE a post/image
+        $(`${$modal} .deletebtn`).on('click', async (event) => {
           event.preventDefault();
 
           const fetchOptions = {
             method: 'DELETE',
             headers: {
-              Authorization: 'Bearer ' + localStorage.getItem('token'),
+              Authorization: 'Bearer ' + userToken,
             },
           };
-          try {
-            const response = await fetch(
-              `./image/${post.image_id}`,
-              fetchOptions
-            );
-            const json = await response.json();
-            console.log('delete response', json);
+
+          const deleteRes = await myCustomFetch(
+            `./image/${post.image_id}`,
+            fetchOptions
+          );
+          if (deleteRes.status) {
             populateImages();
             fetchProfileStatCount(userId, 'image');
             fetchProfileStatCount(userId, 'like');
             fetchProfileStatCount(userId, 'comment');
-          } catch (err) {
-            console.log(err.message);
+            $($modal).hide();
           }
-          $modal.hide();
         });
+
         // When the user clicks anywhere outside of the modal, close it
         $(document).on('click', (event) => {
           if ($(event.target).is($modal)) {
-            $modal.hide();
+            $($modal).hide();
           }
         });
       });
 
-      $(`#image-index-${i} textarea`).on('keyup', (event) => {
-        const textare_val = $(`#image-index-${i} textarea`).val();
+      //Validate the comment input is not blank
+      $($commentInputField).on('keyup', (event) => {
+        const $inputVal = $($commentInputField).val();
 
-        if (textare_val != '') {
-          $(`#image-index-${i} .comment-form button`).attr('disabled', false);
+        if ($inputVal != '') {
+          $(`${$commentSection} button`).attr('disabled', false);
         } else {
-          $(`#image-index-${i} .comment-form button`).attr('disabled', true);
+          $(`${$commentSection} button`).attr('disabled', true);
         }
       });
 
-      $(`#image-index-${i} .comment-form`).on('submit', async (event) => {
+      // When comment is posted
+      $(`${$commentSection} form`).on('submit', async (event) => {
         event.preventDefault();
 
         const urlencoded = new URLSearchParams();
-        urlencoded.append('content', $(`#image-index-${i} textarea`).val());
+        urlencoded.append('content', $($commentInputField).val());
         urlencoded.append('userId', userId);
         urlencoded.append('imageId', post.image_id);
 
@@ -290,22 +272,13 @@ $(() => {
           body: urlencoded,
           redirect: 'follow',
         };
-
-        try {
-          const response = await fetch('./comment/', requestOptions);
-          const result = await response.json();
-          if (result.message) {
-            $(`#image-index-${i} textarea`).val('');
-            $(`#image-index-${i} .comment-form button`).attr('disabled', true);
-            getComments(post.image_id);
-          }
-        } catch (e) {
-          console.log(e.message);
+        const result = await myCustomFetch('./comment/', requestOptions);
+        if (result.message) {
+          $($commentInputField).val('');
+          $(`${$commentSection} button`).attr('disabled', true);
+          getComments(post.image_id);
         }
       });
-
-      //<!--===============================================================================================-->
-      /*--- MAP  MODAL  ---*/
 
       $('.gallery-image').on('click', () => {
         //Get original image URL
@@ -313,16 +286,23 @@ $(() => {
         //Open image in new tab
         window.open(imgUrl, '_blank');
       });
+
+      //When page is loaded
+      getComments(post.image_id); //Get all the comments
+      getLikes(post.image_id); //Get all the likes
+      fetchLikes('POST', 'status', post.image_id); //Get the staus of like button
     });
   };
 
+  //<! End of post card--===============================================================================================-->
+
+  // Fetch all the posts and populate them
   const populateImages = async () => {
-    const response = await fetch('./image/');
-    const images = await response.json();
+    const images = await myCustomFetch('./image/');
     createPostCards(images);
   };
 
-  populateImages();
+  populateImages(); // call this when loaded
 
   // Eventlistner to reflect file name
   $('#fileInput').on('change', (e) => {
@@ -350,8 +330,9 @@ $(() => {
     };
 
     console.log('fetchOptions', fetchOptions);
-    const response = await fetch('./image/', fetchOptions);
-    const result = await response.json();
+
+    const result = await myCustomFetch('./image/', fetchOptions);
+    
     if (result.status) {
       $('#fileLabel').text('Upload');
       $('.upload-form').trigger('reset');
@@ -360,6 +341,7 @@ $(() => {
     }
   });
 
+  // Function to disply time ago in each comments
   const timeAgo = (time) => {
     let result;
     if (typeof time === 'string') {

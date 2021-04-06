@@ -1,13 +1,34 @@
 'use strict';
 
-const postDP = async (fetchOptions) => {
-  const response = await fetch('./user/profile', fetchOptions);
-  const result = await response.json();
-
-  return result;
-};
+import { userId,fetchProfileStatCount, myCustomFetch } from '../js/main.js';
 
 $(() => {
+
+ const populateProfile = async (id) => {
+    const user = await myCustomFetch('./user/' + id);
+    if (user.user_id) {
+      $('.profile-image').css('background-image', `url(./profiles/${user.dp})`);
+      $('.profile-user-name').text(user.username);
+    }
+  };
+
+  // remove signin button if loggedin
+  if (userId) {
+    $('.profile').show();
+    $('.signin').hide();
+    populateProfile(userId);
+  }
+  // remove upload button if not loggedin
+  if (!userId) {
+    $('.upload-form').hide();
+    $('.profile').hide();
+  }
+
+  fetchProfileStatCount(userId, 'image'); //Posts count
+  fetchProfileStatCount(userId, 'like'); //Likes count
+  fetchProfileStatCount(userId, 'comment'); //Comments count
+
+
   // Eventlistner to catch when file added
   $('#profileImg').on('change', async (e) => {
     // Get the selected file
@@ -24,7 +45,7 @@ $(() => {
           body: fd,
         };
 
-        const upload = await postDP(fetchOptions);
+        const upload = await myCustomFetch('./user/profile',fetchOptions);
         const response = await upload;
 
         if(response.status){
@@ -38,26 +59,37 @@ $(() => {
     }
   });
 
+  // Logout modal click listners
   const $modal = $('#id01');
-    $('#id01 .close').on('click', (e) => {
+  $('#id01 .close').on('click', (event) => {
+    event.preventDefault();
     $modal.hide();
-    });
-  $('#profile-settings-btn').on('click', (e) => {
+  });
+
+  $('#profile-settings-btn').on('click', (event) => {
     $modal.show();
   });
-  $('#id01 .cancelbtn').on('click', (e) => {
+
+  $('#id01 .cancelbtn').on('click', (event) => {
+    event.preventDefault();
     $modal.hide();
   });
-  $('#id01 .deletebtn').on('click', (e) => {
+
+  $('#id01 .deletebtn').on('click', (event) => {
+    event.preventDefault();
     localStorage.clear();
     location.reload();
     $modal.hide();
   });
-    // When the user clicks anywhere outside of the modal, close it
-    $(document).on('click',(event) => {
-        if ($(event.target).is($modal) ) {
-            $modal.hide();
-        }  
-    })
+
+  // When the user clicks anywhere outside of the modal, close it
+  $(document).on('click',(event) => {
+      if ($(event.target).is($modal) ) {
+          $modal.hide();
+      }  
+  })
+
+
+
 
 });
