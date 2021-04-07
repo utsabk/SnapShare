@@ -19,4 +19,6 @@ router.post(
 router.put('/:id', validationRules(), validate, controller.updateUserData);
 
 
+router.get('/',controller.userSearch)
+
 export default router;

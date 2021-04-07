@@ -84,4 +84,16 @@ const updateUserData = async(data)=>{
   }
 }
 
-export { getUsersList, getUserWithId, getUserWithEmail, uploadUserData, postProfile, getUserWithUsername, updateUserData };
+const userSearch = async(query) =>{
+  try{
+    const [rows] = await promisePool.execute(
+      `SELECT * FROM image INNER JOIN user ON image.owner_id = user.user_id WHERE username LIKE '%${query}%' ORDER BY creation_date DESC;`
+     // `SELECT * FROM user WHERE username LIKE '%${query}%' ;`
+    )
+   return rows;
+  }catch (err){
+    console.log('Error while search:-',err)
+  }
+}
+
+export { getUsersList, getUserWithId, getUserWithEmail, uploadUserData, postProfile, getUserWithUsername, updateUserData, userSearch };

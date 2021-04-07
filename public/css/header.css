@@ -16,7 +16,7 @@
     .header .logo { 
       color: #e2dfd5; 
       font-family: "Sofia"; 
-      font-size: 22px;
+      font-size: 30px;
        font-weight: normal; 
        text-align: center; 
        text-shadow: 0 1px 1px #fff; }
@@ -31,26 +31,23 @@
   align-items: center;
 }
 .header input[type='text'] {
-  width: 250px;
-  height: 25px;
-  font-size: 12px;
-  padding: 0px 15px;
-  margin-right: -4px;
-  border: 1px solid #e4e7ed;
+  width: 85%;
+  font-size: 17px;
+  padding: 6px 10px;
   background-color: #fff;
 }
-.header .search-container .search-btn {
-  height: 25px;
-  width: 50px;
-  background: #d10024;
-  color: #fff;
-  font-weight: 700;
-  font-size: 10px;
+.header .search-container button {
+  padding: 7px 10px;
+  background: #ddd;
+  margin-top: 1px;
+  font-size: 17px;
   border: none;
-  border-radius: 0px 40px 40px 0px;
   float: right;
 }
 
+.header .search-container button:hover {
+  background: #ccc;
+}
 /*----------------------------*\
         User
     \*----------------------------*/

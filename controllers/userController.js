@@ -36,5 +36,23 @@ const updateUserData = async (req, res) => {
   }
 };
 
+const userSearch = async (req, res) => {
+  try {
+   const query = req.query.name;
 
-export { uploadProfile, userWithId, updateUserData };
+   console.log('This is a query',query);
+
+   const search = await model.userSearch(query);
+
+    if(search){
+      res.json(search);
+    }
+
+
+  } catch (err) {
+  console.log('Error while searching:-',err);
+  }
+}
+
+
+export { uploadProfile, userWithId, updateUserData, userSearch };

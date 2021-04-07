@@ -338,4 +338,4 @@ $(() => {
   });
 });
 
-export { populateImages };
+export { populateImages, createPostCards };
