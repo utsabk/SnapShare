@@ -151,30 +151,20 @@ $(() => {
       },
     },
     submitHandler: (form) => {
-      // Onsubmit method comes here to
-      /**
-       * Form is submitted as many times as SUBMIT btn is pressed
-       *  after the Jquery validation is passed in the front end.
-       *  one will prevent from multiple submit
-       * */ 
-       
-      if($(form).valid()){
-        $(form).one('submit', async (event) => {
-          event.preventDefault();
-          localStorage.clear();
+      localStorage.clear();
 
-          var validator = $(form).validate();
+      var validator = $(form).validate();
 
-          const fd = {
-            username: $('#signUpUsername').val(),
-            email: $('#signUpEmail').val(),
-            password: $('#signUpPassword').val(),
-            confirmPassword: $('#confirmPassword').val(),
-          };
+      const fd = {
+        username: $('#signUpUsername').val(),
+        email: $('#signUpEmail').val(),
+        password: $('#signUpPassword').val(),
+        confirmPassword: $('#confirmPassword').val(),
+      };
 
-          registerUser(fd, validator);
-        });
-      }
+      registerUser(fd, validator);
+     
+      
     },
   });
 

@@ -71,4 +71,17 @@ const postProfile = async(data)=>{
   }
 }
 
-export { getUsersList, getUserWithId, getUserWithEmail, uploadUserData, postProfile, getUserWithUsername };
+const updateUserData = async(data)=>{
+  try{
+    const [rows] = await promisePool.execute(
+      'UPDATE `user` SET `username` = ?, `email` = ? WHERE `user_id`=?',
+      data
+    );
+    return rows;
+  }
+  catch (err){
+    console.log('Error update userdata:-',err)
+  }
+}
+
+export { getUsersList, getUserWithId, getUserWithEmail, uploadUserData, postProfile, getUserWithUsername, updateUserData };

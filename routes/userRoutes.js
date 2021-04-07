@@ -2,6 +2,8 @@
 import express from 'express';
 import * as controller from '../controllers/userController.js';
 import { uploadDestProfile } from '../utils/uploadDest.js';
+import { validationRules, validate } from '../utils/validator.js';
+
 
 const router = express.Router();
 
@@ -13,5 +15,8 @@ router.post(
   uploadDestProfile.single('profile'),
   controller.uploadProfile
 );
+
+router.put('/:id', validationRules(), validate, controller.updateUserData);
+
 
 export default router;

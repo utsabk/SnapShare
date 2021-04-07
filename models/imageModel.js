@@ -8,7 +8,7 @@ const getAllImages = async () => {
   try {
     // query database using promises
     const [rows] = await promisePool.execute(
-      'SELECT * FROM `image` INNER JOIN `user` ON image.owner_id = user.user_id;'
+      'SELECT * FROM `image` INNER JOIN `user` ON image.owner_id = user.user_id ORDER BY `creation_date` DESC;'
     );
     return rows;
   } catch (e) {

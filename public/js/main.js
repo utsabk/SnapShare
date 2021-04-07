@@ -40,6 +40,29 @@ const myCustomFetch = async (url, fetchOptions) => {
   }
 };
 
+const modalClickHandler = async (modal) =>{
+
+  $(`${modal} .close`).on('click', (e) => {
+    e.preventDefault();
+
+    $(modal).hide();
+  });
+
+  $(`${modal} .cancelbtn`).on('click', (event) => {
+    event.preventDefault();
+    $(modal).hide();
+  });
+
+  // When the user clicks anywhere outside of the modal, close it
+  $(document).on('click', (event) => {
+    if ($(event.target).is(modal)) {
+      $(modal).hide();
+    }
+  });
+ 
+}
+
+
 const timeDiff = (time)=>{
     if (typeof time === 'string') {
         time = Date.parse(time);
@@ -57,7 +80,7 @@ const timeAgo = (time) => {
 
     if (difference < 5 * 1000) {
       return 'just now';
-    } else if (difference < 90 * 1000) {
+    } else if (difference < 60 * 1000) {
       return 'moments ago';
     }
 
@@ -100,6 +123,8 @@ const updateTimeElement = (element, time, timeInterval) => {
 const updateTimeInterval = (element, time) => {
     if (timeDiff(time) < 10 * 1000) {
     updateTimeElement(element, time, 5); // if less than 10 secs upadte every 5 secs
+    }else if(timeDiff(time) < 60 * 1000) {
+      updateTimeElement(element, time, 20); // if less than 50 secs upadte every 30 secs
     } else if (timeDiff(time) < 3600 * 1000) {
     updateTimeElement(element, time, 60); // if less than an hour upadte every minute
     } else {
@@ -108,4 +133,4 @@ const updateTimeInterval = (element, time) => {
 };
     
 
-export { userId, userToken, fetchProfileStatCount, myCustomFetch, timeDiff, timeAgo , updateTimeInterval};
+export { userId, userToken, fetchProfileStatCount, myCustomFetch, timeDiff, timeAgo , updateTimeInterval, modalClickHandler};

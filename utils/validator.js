@@ -23,6 +23,7 @@ const validationRules = () => {
       })
       .normalizeEmail(),
     body('password')
+      .optional()
       .matches('(?=.*[A-Z]).{5,}')
       .withMessage('Min 5 char with one capital letter'),
     body('confirmPassword').custom((value, { req }) => {

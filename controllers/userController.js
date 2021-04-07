@@ -24,4 +24,17 @@ const uploadProfile = async (req, res) => {
   }
 };
 
-export { uploadProfile, userWithId };
+const updateUserData = async (req, res) => {
+  try {
+    const data = [req.body.username, req.body.email, req.params.id];
+    const upload = await model.updateUserData(data);
+    if(upload){
+      res.send({ status: 'user data updated' });
+    }
+  } catch (err) {
+    console.log('Error updating userdata:-', err);
+  }
+};
+
+
+export { uploadProfile, userWithId, updateUserData };

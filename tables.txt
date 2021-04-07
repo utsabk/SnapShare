@@ -4,9 +4,7 @@ CREATE TABLE `image` (
   `image_id` int(11) NOT NULL,
   `imagename` text NOT NULL,
   `creation_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `owner_id` int(11) NOT NULL,
-  `like_count` int(11) DEFAULT 0,
-  `comment_count` int(11) DEFAULT 0
+  `owner_id` int(11) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 ALTER TABLE `image`
@@ -14,12 +12,7 @@ ALTER TABLE `image`
 
 ALTER TABLE `image`
   MODIFY `image_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
-
-ALTER TABLE `image`
-  DROP COLUMN `like_count`;
-
-ALTER TABLE `image`
-  DROP COLUMN `comment_count`;
+  
 
 INSERT INTO `image` (`image_id`, `imagename`, `creation_date`, `owner_id`) VALUES
 (11, 'cat-094398887.png', '2021-03-15 00:00:01', 5),
@@ -30,8 +23,8 @@ INSERT INTO `image` (`image_id`, `imagename`, `creation_date`, `owner_id`) VALUE
 
 CREATE TABLE `user` (
   `user_id` int(11) NOT NULL,
-  `username` text NOT NULL,
-  `email` text NOT NULL,
+  `username` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
   `password` text NOT NULL,
   `dp`  text DEFAULT ''
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;

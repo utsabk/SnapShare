@@ -3,7 +3,7 @@ import * as model from '../models/imageModel.js';
 
 const getImagesList = async (req, res) => {
   const posts = await model.getAllImages();
-  // Rest in Object Destructuring to get all the properties except password
+  // Rest in Object Destructuring to get all the properties of image with image owner except owner password
   const postsWithoutPW = posts.map(({ password, ...post }) => post);
   res.json(postsWithoutPW);
 };
