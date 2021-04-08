@@ -3,6 +3,7 @@
 import {
   modalClickHandler,
   userId,
+  userToken,
   fetchProfileStatCount,
   myCustomFetch,
 } from './main.js';
@@ -14,7 +15,16 @@ $(() => {
   const $editProfileAbout = $('#editProfileAbout');
 
   const populateProfile = async (id) => {
-    const user = await myCustomFetch('./user/' + id);
+    const fetchOptions = {
+      method: 'GET',
+      headers: {
+        Authorization: 'Bearer ' + userToken,
+      }
+    }
+
+    const user = await myCustomFetch('./user/' + id, fetchOptions);
+
+    console.log('This is user :-',user)
     if (user.user_id) {
 
       // Check if user profile exits
@@ -50,13 +60,13 @@ $(() => {
   };
 
   // remove signin button if loggedin
-  if (userId) {
+  if (userToken) {
     $('.profile').show();
     $('.signin').hide();
     populateProfile(userId);
   }
   // remove upload button if not loggedin
-  if (!userId) {
+  if (!userToken) {
     $('.upload-form').hide();
     $('.profile').hide();
   }
@@ -77,6 +87,9 @@ $(() => {
 
         const fetchOptions = {
           method: 'POST',
+          headers: {
+            Authorization: 'Bearer ' + userToken,
+          },
           body: fd,
         };
 
@@ -121,6 +134,9 @@ $(() => {
 
     const requestOptions = {
       method: 'PUT',
+      headers: {
+        Authorization: 'Bearer ' + userToken,
+      },
       body: urlencoded,
       redirect: 'follow',
     };
@@ -179,7 +195,7 @@ $(() => {
 
   $(`${$logoutModal} .deletebtn`).on('click', (event) => {
     event.preventDefault();
-    localStorage.clear();
+    sessionStorage.clear();
     location.reload();
     $($logoutModal).hide();
   });

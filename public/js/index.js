@@ -98,15 +98,6 @@ const createPostCards = (posts) => {
     // Update posted time for each post every timeinterval
     updateTimeInterval($postUplodedTime, post.creation_date);
 
-    // Like and Comment allowed only when logged in
-    if (!userId) {
-      $($likeBtn).prop('disabled', true);
-      $($commentBtn).prop('disabled', true);
-    } else {
-      $($likeBtn).prop('disabled', false);
-      $($commentBtn).prop('disabled', false);
-    }
-
     // Only owner of the post allowed to delete
     if (userId == post.owner_id) {
       $(`${$imageWithIndex} .chip i`).show();
@@ -144,6 +135,9 @@ const createPostCards = (posts) => {
 
       const fetchOptions = {
         method: myMethod,
+        headers: {
+          Authorization: 'Bearer ' + userToken,
+        },
         body: urlencoded,
         redirect: 'follow',
       };
@@ -231,6 +225,9 @@ const createPostCards = (posts) => {
 
       const requestOptions = {
         method: 'POST',
+        headers: {
+          Authorization: 'Bearer ' + userToken,
+        },
         body: urlencoded,
         redirect: 'follow',
       };
@@ -276,14 +273,27 @@ const createPostCards = (posts) => {
         fetchProfileStatCount(userId, 'image');
         fetchProfileStatCount(userId, 'like');
         fetchProfileStatCount(userId, 'comment');
-        $($modal).hide();
+        $($deleteModal).hide();
       }
     });
 
     //When page is loaded
     getComments(post.image_id); //Get all the comments
     getLikes(post.image_id); //Get all the likes
-    fetchLikes('POST', 'status', post.image_id); //Get the staus of like button
+
+
+
+    // Like and Comment allowed only when logged in
+    if (!userId) {
+      $($likeBtn).prop('disabled', true);
+      $($commentBtn).prop('disabled', true);
+    } else {
+      $($likeBtn).prop('disabled', false);
+      $($commentBtn).prop('disabled', false);
+      fetchLikes('POST', 'status', post.image_id); //Get the staus of like button
+    }
+
+
   });
 };
 
@@ -322,6 +332,9 @@ $(() => {
 
     const fetchOptions = {
       method: 'POST',
+      headers: {
+        Authorization: 'Bearer ' + userToken,
+      },
       body: fd,
     };
 

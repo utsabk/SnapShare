@@ -22,8 +22,8 @@ const myFetch = async (endpoint, fd) => {
 };
 
 const saveToken = (response) => {
-  localStorage.setItem('userId', response.user_id);
-  localStorage.setItem('token', response.token);
+  sessionStorage.setItem('userId', response.user_id);
+  sessionStorage.setItem('token', response.token);
 };
 
 const registerUser = async (formData, validator) => {
@@ -152,7 +152,7 @@ $(() => {
       },
     },
     submitHandler: (form) => {
-      localStorage.clear();
+      sessionStorage.clear();
 
       var validator = $(form).validate();
 
