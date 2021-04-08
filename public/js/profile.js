@@ -11,10 +11,12 @@ import { populateImages } from './index.js';
 $(() => {
   const $editProfileUsername = $('#editProfileUsername');
   const $editProfileEmail = $('#editProfileEmail');
+  const $editProfileAbout = $('#editProfileAbout');
 
   const populateProfile = async (id) => {
     const user = await myCustomFetch('./user/' + id);
     if (user.user_id) {
+
       // Check if user profile exits
       if (user.dp) {
         $('.profile-image').css(
@@ -25,12 +27,25 @@ $(() => {
         $('.profile-image').css('background-image', 'url(./images/logo.png)');
       }
 
+
+      // Check if user about exits
+      if(user.bio){
+        $('.profile-bio .profile-bio-only').text(user.bio)
+      }else{
+        $('.profile-bio .profile-bio-only').text('')
+      }
+
       $('.profile-user-name').text(user.username);
     }
 
     $('#edit-profile').on('click', async (event) => {
       $editProfileUsername.val(user.username);
       $editProfileEmail.val(user.email);
+      if(user.bio){
+        $editProfileAbout.val(user.bio)
+      }else{
+        $editProfileAbout.val('');
+      }
     });
   };
 
@@ -54,7 +69,6 @@ $(() => {
   $('#profileImg').on('change', async (e) => {
     // Get the selected file
     const [file] = e.target.files;
-    console.log('This is the file uploaded:-', file);
     if (file) {
       try {
         const fd = new FormData();
@@ -70,7 +84,6 @@ $(() => {
         const response = await upload;
 
         if (response.status) {
-          console.log('this is the response upload:-', response);
           populateProfile(userId);
           populateImages();
         }
@@ -84,6 +97,7 @@ $(() => {
   const $editProfileModal = '#edit-profile-modal';
 
   $('#edit-profile').on('click', (event) => {
+    $("#editProfileForm").data("changed",false); //Set data chaged to false
     $($editProfileModal).show();
   });
 
@@ -91,14 +105,19 @@ $(() => {
 
   var $editFormValidator = $('#editProfileForm').validate()
 
+  // Check if the input has chnaged
+  $('#editProfileForm :input').on('change',(event) => {
+    $("#editProfileForm").data("changed",true); //Set data chaged
+  })
+
+  
   $('#editProfileForm .deletebtn').on('click', async (event) => {
     event.preventDefault();
 
     const urlencoded = new URLSearchParams();
     urlencoded.append('username', $editProfileUsername.val());
     urlencoded.append('email', $editProfileEmail.val());
-
-    console.log('This is form data:-', urlencoded);
+    urlencoded.append('about', $editProfileAbout.val());
 
     const requestOptions = {
       method: 'PUT',
@@ -106,34 +125,46 @@ $(() => {
       redirect: 'follow',
     };
 
-    try{
-      const result = await myCustomFetch(`./user/${userId}`,requestOptions)
-      console.log('Result from server:-',result);
+    // Only if input value is changed
+    if($("#editProfileForm").data("changed")){
+    
+      try{
+        const result = await myCustomFetch(`./user/${userId}`,requestOptions)
+        console.log('Result from server:-',result);
 
-      if(result.errors){
-        result.errors.forEach(err => {
-          console.log('this is err:-',err);
-          if(err.username){
-            $editFormValidator.showErrors({
-              username:err.username
-            })
-          }
+        if(result.errors){
+          result.errors.forEach(err => {
+            console.log('this is err:-',err);
+            if(err.username){
+              $editFormValidator.showErrors({
+                username:err.username
+              })
+            }
 
-          if(err.email){
-            $editFormValidator.showErrors({
-              email:err.email
-            })
-          }
-        })
-      }else if(result.status){
-        console.log('result.statts:-',result.status);
-        populateImages();
-        populateProfile(userId)
-        $($editProfileModal).hide();
+            if(err.email){
+              $editFormValidator.showErrors({
+                email:err.email
+              })
+            }
+          })
+        }else if(result.status){
+          console.log('result.statts:-',result.status);
+          populateImages();
+          populateProfile(userId)
+          $($editProfileModal).hide();
+          $('label.error').remove(); // Remove error label
+          $($editProfileModal).find('.error').removeClass('error')
+        }
+
+      }catch (err) {
+        console.log('Error:-',err);
       }
-
-    }catch (err) {
-      console.log('Error:-',err);
+    }else{
+      $editFormValidator.showErrors({
+        username:'Data not changed',
+        email:'Data not changed',
+        about:'Data not changed'
+      })
     }
   });
 

@@ -49,7 +49,9 @@ const modalClickHandler = async (modal) =>{
   });
 
   $(`${modal} .cancelbtn`).on('click', (event) => {
-    event.preventDefault();
+     event.preventDefault();
+    $('label.error').remove();
+    $(modal).find('.error').removeClass('error')
     $(modal).hide();
   });
 

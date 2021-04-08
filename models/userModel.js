@@ -74,7 +74,7 @@ const postProfile = async(data)=>{
 const updateUserData = async(data)=>{
   try{
     const [rows] = await promisePool.execute(
-      'UPDATE `user` SET `username` = ?, `email` = ? WHERE `user_id`=?',
+      'UPDATE `user` SET `username` = ?, `email` = ? , `bio`= ? WHERE `user_id`=?',
       data
     );
     return rows;

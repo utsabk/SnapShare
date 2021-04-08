@@ -79,12 +79,17 @@
                 <span class="close" title="Close Modal" >x</span>
                 <form id="editProfileForm" class="modal-content">
                     <div class="container">
-                        <label><b>Username</b></label>
+                        <span><b>Username</b></span>
                         <input id="editProfileUsername" type="text"  name="username" minlength="3" required>
               
                         <br></br>
-                        <label><b>Email</b></label>
+                        <span><b>Email</b></span>
                         <input id="editProfileEmail" type="email" name="email" required>
+
+                        <br></br>
+                        <span><b>About</b></span>
+                        <textarea id="editProfileAbout" type="text" name="about" required="required"></textarea>
+
 
                         <div class="clearfix">
                             <button type="reset" class="cancelbtn">Cancel</button>
@@ -134,7 +139,7 @@
         </div>
 
         <div class="profile-bio">
-          <p class="profile-real-name">Jane Doe</p>
+          <p class="profile-real-name">About</p>
           <p class="profile-bio-only">
             Lorem ipsum dolor sit, amet consectetur adipisicing elit📷✈️🏕️
           </p>

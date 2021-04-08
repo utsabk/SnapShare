@@ -109,11 +109,17 @@ img {
   }
 
 
+
 .profile-user-settings,
-.profile-stats,
+.profile-stats ,
 .profile-bio {
-  float: left;
+  float: right;
   width: calc(66.666% - 2rem);
+}
+
+
+.profile-stats ul{
+  padding-inline-start: 0px;
 }
 
 .profile-user-settings {
@@ -176,14 +182,15 @@ img {
   display: flex;
 }
 
-.modal-content label{
-  /* float:left;  */
+.modal-content span{
+   float:left;  
   color: #2e2727;
   font-size: 12px;
   font-weight: bold;
 }
 /*add full-width input fields*/
-.modal-content input{
+.modal-content input,
+.modal-content textarea{
   width: 100%;
   padding: 12px 20px;
   margin: 8px 0;
@@ -254,7 +261,14 @@ img {
   margin: 5% auto 15% auto; /* 5% from the top, 15% from the bottom and centered */
   border: 1px solid #888;
   color: #1a1d1a;
-  width: 20%; /* Could be more or less, depending on screen size */
+  width: 30%; /* Could be more or less, depending on screen size */
+
+}
+
+
+#edit-profile-modal .modal-content{
+
+  width: 40%;/* Could be more or less, depending on screen size */
 
 }
 
@@ -430,8 +444,7 @@ img {
 
 .error {
 	color: #ba3939;
-  background: #ffe0e0;
-  border: 1px solid #a33a3a;
+  font-size: 14px !important; 
 }
 
 
@@ -485,9 +498,10 @@ img {
   }
 
   .profile-user-settings {
-    flex-basis: calc(100% - 10.7rem);
+    flex-basis: calc(40% - 10.7rem);
     display: flex;
     flex-wrap: wrap;
+    align-content: center;
     margin-top: 1rem;
   }
 

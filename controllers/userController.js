@@ -25,8 +25,13 @@ const uploadProfile = async (req, res) => {
 };
 
 const updateUserData = async (req, res) => {
+  
+  if(!req.body.about){
+    req.body.about = '';
+  }
+
   try {
-    const data = [req.body.username, req.body.email, req.params.id];
+    const data = [req.body.username, req.body.email, req.body.about, req.params.id];
     const upload = await model.updateUserData(data);
     if(upload){
       res.send({ status: 'user data updated' });

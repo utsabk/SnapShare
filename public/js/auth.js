@@ -27,9 +27,10 @@ const saveToken = (response) => {
 };
 
 const registerUser = async (formData, validator) => {
-  console.log('Im getting called:-');
   try {
     const response = await myFetch('register', formData);
+
+    //console.log('Response:-',response);
 
     if (response.errors) {
       response.errors.forEach((error) => {
