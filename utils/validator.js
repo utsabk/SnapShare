@@ -7,9 +7,14 @@ import {
 
 const validationRules = () => {
   return [
-    body('username', 'Minimum 3 characters')
+    /**
+     * `body([fields, message])`, only checking `req.body`
+     * @param {string} field A string or array of strings of field names to validate against
+     * @param {string} message An error message to use when validator don't specify a message
+     */
+    body('username', 'Minimum 3 characters') 
       .isLength({ min: 3 })
-      .custom(async (value, { req }) => {
+      .custom(async (value, { req }) => { //Receives the value of the field being validated, as well as the express `request`, the `location` and the `field path`.
         const userID = req.params.id;
 
         const [userWithUsername] = await getUserWithUsername(value);
@@ -26,7 +31,7 @@ const validationRules = () => {
               const [currentUser] = await getUserWithId(userID); // If defined outside, userID not found and error occoured
 
               if (currentUser.username == userWithUsername.username) {
-                // check if username mathes with current user
+                // check if username matches with current user
                 return Promise.resolve();
               } else {
                 return Promise.reject('Username already in use');
@@ -35,12 +40,12 @@ const validationRules = () => {
           }
         }
       })
-      .trim()
+      .trim() //  Removes whitespace from both sides of a string.
       .escape(),
 
     body('email', 'Email is not valid')
       .isEmail()
-      .custom(async (value, { req }) => {
+      .custom(async (value, { req }) => { // Custom validator returns a promise
         const userID = req.params.id;
         const [userWithEmail] = await getUserWithEmail(value);
 
@@ -69,7 +74,7 @@ const validationRules = () => {
       .normalizeEmail(),
 
     body('password')
-      .optional()
+      .optional() // Marks the current validation chain as optional, `undefined` values will be ignored from the validation.
       .matches('(?=.*[A-Z]).{5,}')
       .withMessage('Min 5 char with one capital letter'),
 
@@ -85,10 +90,11 @@ const validationRules = () => {
 };
 
 const validate = (req, res, next) => {
-  // Finds the validation errors in this request and wraps them in an object with handy functions
-  const errors = validationResult(req);
+  // Extracts the validation errors from a request and wraps them in an object with handy functions
+  const errors = validationResult(req); 
   if (!errors.isEmpty()) {
     const extractedErrors = [];
+    // Extract only the error's param(field) and error message as an object and add them to an array
     errors.array().map((err) => extractedErrors.push({ [err.param]: err.msg }));
 
     return res.status(400).json({ errors: extractedErrors });

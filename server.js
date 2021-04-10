@@ -14,7 +14,7 @@ import userRoutes from './routes/userRoutes.js';
 const app = express();
 const httpServer = http.createServer(app);
 
-// before routes; otherwise middleware didn't get called
+// Before routes; otherwise middleware didn't get called
 if (process.env.NODE_ENV === 'production') {
   app.enable('trust proxy');
   app.use((req, res, next) => {
@@ -37,8 +37,8 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-app.use(cors());
-app.use(helmet());
+app.use(cors()); // To allow resources from different sources/outside domains
+app.use(helmet()); // Protect your HTTP headers
 app.use(express.static('public'));
 app.use('/modules', express.static('node_modules'));
 app.use(express.json());

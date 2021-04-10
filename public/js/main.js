@@ -1,4 +1,7 @@
 'use strict';
+/**
+ * This file holds the key functions which will be served to the other files
+ */
 
 // Get userID from local storage
 const userId = sessionStorage.getItem('userId');
@@ -28,8 +31,9 @@ const fetchProfileStatCount = async (userID, fetchRoute) => {
     console.log(err.message);
   }
 };
-
-const myCustomFetch = async (url, fetchOptions) => {
+ 
+ 
+const myCustomFetch = async (url, fetchOptions) => { // Serves Fetch API for fetching resources
   if (fetchOptions) {
     try {
       const response = await fetch(url, fetchOptions);
@@ -76,14 +80,18 @@ const modalClickHandler = async (modal) =>{
 
 const timeDiff = (time)=>{
     if (typeof time === 'string') {
-        time = Date.parse(time);
+        time = Date.parse(time); // Change string to type date
       }
       const difference = Date.now() - time;
 
     return difference;
 }
 
-// Function to disply time ago in each comments
+/**
+ * 
+ * @param {String} time 
+ * @returns string in minutes, hours or day depending upon the time difference
+ */
 const timeAgo = (time) => {
     let result;
     
@@ -126,7 +134,7 @@ const timeAgo = (time) => {
 // Update comment's time
 const updateTimeElement = (element, time, timeInterval) => {
   setInterval(() => {
-    element.html(timeAgo(time)); //every "timeInterval" ,"time" is updated on "element"
+    element.html(timeAgo(time)); //Depending upon the "timeInterval" ,"time" is updated on each "element"
   }, timeInterval * 1000);
 };
 

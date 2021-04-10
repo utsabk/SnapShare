@@ -5,7 +5,7 @@ import passport from '../utils/pass.js';
 import { uploadUserData } from '../models/userModel.js';
 
 const authenticate = (req, res) => {
-  // Authentication handled as Promise
+  // Authentication handled as a Promise
   return new Promise((resolve, reject) => {
     passport.authenticate('local', { session: false }, (err, user, info) => {
       try {
@@ -16,6 +16,7 @@ const authenticate = (req, res) => {
           if (err) {
             reject(err);
           }
+        // generate a signed Json web token with the contents of user object and return it in the response
           const token = jwt.sign(user, process.env.SECRET_KEY);
           resolve({ user, token });
         });

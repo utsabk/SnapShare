@@ -21,17 +21,25 @@ const myFetch = async (endpoint, fd) => {
   }
 };
 
+/**
+ * Saves the tokens to the session storage
+ * @param {Object} response is a reponse from the server
+ */
 const saveToken = (response) => {
   sessionStorage.setItem('userId', response.user_id);
   sessionStorage.setItem('token', response.token);
 };
 
+
 const registerUser = async (formData, validator) => {
   try {
     const response = await myFetch('register', formData);
 
-    //console.log('Response:-',response);
-
+    /**
+     * Even though the form is validated in the frontend with `JQuery Validator`,
+     * Request is also validated with `express-validator`, e.g. if email/username is already in use
+     * Express validator will return errors object in case of validation failure
+     */
     if (response.errors) {
       response.errors.forEach((error) => {
         console.log('This is error: ' , error)
@@ -92,12 +100,14 @@ $(() => {
     $('#signUpForm').hide();
     $('#loginForm').show(); 
   })
-  // Signup form elements ===============================================================================================
 
 
-
-  // Form validator from Jquery plugin 'Validator'
-  $.validator.addMethod(
+  // Signup form elements 
+  /**
+   * Form validator from Jquery plugin 'Validator'
+   * @see {@link https://jqueryvalidation.org/documentation/}
+   */
+  $.validator.addMethod( // Custom validator
     'customemail',
     (value, element) => {
       return /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
@@ -115,7 +125,7 @@ $(() => {
       },
       email: {
         required: true,
-        customemail: true,
+        customemail: true, // Custom validator being called
       },
       password: {
         required: true,
@@ -151,7 +161,7 @@ $(() => {
         },
       },
     },
-    submitHandler: (form) => {
+    submitHandler: (form) => { // Get called only if the form is valid
       sessionStorage.clear();
 
       var validator = $(form).validate();
@@ -169,8 +179,7 @@ $(() => {
     },
   });
 
-  // Signin form elements ===============================================================================================
-
+  // Signin form elements 
   $('#loginForm').on('submit', async (event) => {
     localStorage.clear();
     event.preventDefault();
