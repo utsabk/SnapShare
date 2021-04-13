@@ -44,10 +44,6 @@ ALTER TABLE `user`
 ALTER TABLE `user` 
   ADD `bio` varchar(255) DEFAULT '';
 
-INSERT INTO `user` (`username`, `email`, `password`) VALUES
-('John Doe', 'john@metropolia.fi', '1234'),
-('Jane Doez', 'jane@metropolia.fi', 'qwer');
-
 <!--===============================================================================================-->
 CREATE TABLE `comment` (
   `comment_id` int(11) NOT NULL,

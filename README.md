@@ -10,12 +10,21 @@
 </p>
 
 <!-- PROJECT LOGO -->
-<br />
 <p align="center">
     <a href="http://">
         <img src="logo.png" >
     </a>
 </p>
+
+<!-- PROJECT DEMO -->
+<p align="center">
+    <a href="http://">
+        <img src="./public/demo/snapshare.gif" >
+    </a>
+</p>
+
+
+<br>
 
 # Overview
 SnapShare is an applicaton that allows users to snap pictures and share them up with friends insatntly.
@@ -59,7 +68,7 @@ backend
 frontend
     │
     └─── public
-        └─── css                #all css file
+        └─── css                #all css files
         └─── images             #all the images used
         └─── js                 #make request to backend and display the reponse    
         └─── profiles           #all the profile pictures
@@ -120,3 +129,8 @@ $ npm install
 $ npm start
 ```
 Your app should now be running on [localhost:3000](http://localhost:3000/)
+
+## Demo
+
+
+[Full Video](https://youtu.be/RQE2pXkcyMk)
