@@ -6,15 +6,28 @@ import {
   userToken,
   fetchProfileStatCount,
   myCustomFetch,
+  hideContent,
+  showContent
 } from './main.js';
 import { populateImages } from './index.js';
 
-$(() => {
-  const $editProfileUsername = $('#editProfileUsername');
-  const $editProfileEmail = $('#editProfileEmail');
-  const $editProfileAbout = $('#editProfileAbout');
 
-  const populateProfile = async (id) => {
+  // Edit profile form elements
+  const editProfileBtn = document.getElementById('edit-profile');
+  const editProfileForm = document.getElementById('editProfileForm')
+  const editProfileUsername = document.getElementById('editProfileUsername');
+  const editProfileEmail = document.getElementById('editProfileEmail');
+  const editProfileAbout = document.getElementById('editProfileAbout');
+
+  // Profile section elements
+  const displayPicture = document.querySelector('.profile-image');
+  const dpInput = document.getElementById('dpInput');
+  const profileAbout = document.querySelector('.profile-bio .profile-bio-only');
+  const profileUserName = document.querySelector('.profile-user-name');
+  
+  let editFormChanged = false
+
+ const populateProfile = async (id) => {
     const fetchOptions = {
       method: 'GET',
       headers: {
@@ -29,46 +42,42 @@ $(() => {
 
       // Check if user profile exits
       if (user.dp) {
-        $('.profile-image').css(
-          'background-image',
-          `url(./profiles/${user.dp})`
-        );
+        displayPicture.style.backgroundImage = `url(./profiles/${user.dp})`
       } else {
-        $('.profile-image').css('background-image', 'url(./images/logo.png)');
+        displayPicture.style.backgroundImage = `url(./images/logo.png)`
       }
 
 
       // Check if user about exits
       if(user.bio){
-        $('.profile-bio .profile-bio-only').text(user.bio)
+        profileAbout.textContent = user.bio;
       }else{
-        $('.profile-bio .profile-bio-only').text('')
+        profileAbout.textContent = '';
       }
-
-      $('.profile-user-name').text(user.username);
+      profileUserName.textContent = user.username;
     }
 
-    $('#edit-profile').on('click', async (event) => {
-      $editProfileUsername.val(user.username);
-      $editProfileEmail.val(user.email);
+    editProfileBtn.addEventListener('click', async (event) => {
+      editProfileUsername.value = user.username;
+      editProfileEmail.value = user.email;
       if(user.bio){
-        $editProfileAbout.val(user.bio)
+        editProfileAbout.value = user.bio;
       }else{
-        $editProfileAbout.val('');
+        editProfileAbout.value = '';
       }
     });
   };
 
   // remove signin button if loggedin
   if (userToken) {
-    $('.profile').show();
-    $('.signin').hide();
+    showContent(document.querySelector('.profile'));
+    hideContent( document.querySelector('.signin'));
     populateProfile(userId);
   }
   // remove upload button if not loggedin
   if (!userToken) {
-    $('.upload-form').hide();
-    $('.profile').hide();
+    hideContent(document.querySelector('.upload-form'));
+    hideContent(document.querySelector('.profile'))
   }
 
   fetchProfileStatCount(userId, 'image'); //Posts count
@@ -76,7 +85,7 @@ $(() => {
   fetchProfileStatCount(userId, 'comment'); //Comments count
 
   // Eventlistner to catch when file added
-  $('#profileImg').on('change', async (e) => {
+  dpInput.addEventListener('change', async (e) => {
     // Get the selected file
     const [file] = e.target.files;
     if (file) {
@@ -107,30 +116,32 @@ $(() => {
   });
 
   // Edit profile modal click listners
+
   const $editProfileModal = '#edit-profile-modal';
 
-  $('#edit-profile').on('click', (event) => {
-    $("#editProfileForm").data("changed",false); //Set data chaged to false
-    $($editProfileModal).show();
+  editProfileBtn.addEventListener('click', (event) => {
+    editFormChanged=false;
+    // edit
+    // $("#editProfileForm").data("changed",false); //Set data chaged to false
+    document.querySelector('#edit-profile-modal').style.display ='block';
   });
 
-  modalClickHandler($editProfileModal);
+  modalClickHandler('#edit-profile-modal');
 
-  var $editFormValidator = $('#editProfileForm').validate()
-
-  // Check if the input has chnaged
-  $('#editProfileForm :input').on('change',(event) => {
-    $("#editProfileForm").data("changed",true); //Set data chaged
+  // Check if the input has changed
+  editProfileForm.addEventListener('input',(event) => {
+    console.log('data chnaged');
+    editFormChanged = true; //Set data changed
   })
 
   
-  $('#editProfileForm .deletebtn').on('click', async (event) => {
+  document.querySelector('#editProfileForm .deletebtn').addEventListener('click', async (event) => {
     event.preventDefault();
 
     const urlencoded = new URLSearchParams();
-    urlencoded.append('username', $editProfileUsername.val());
-    urlencoded.append('email', $editProfileEmail.val());
-    urlencoded.append('about', $editProfileAbout.val());
+    urlencoded.append('username', editProfileUsername.value);
+    urlencoded.append('email', editProfileEmail.value);
+    urlencoded.append('about', editProfileAbout.value);
 
     const requestOptions = {
       method: 'PUT',
@@ -142,7 +153,7 @@ $(() => {
     };
 
     // Only if input value is changed
-    if($("#editProfileForm").data("changed")){
+    if(editFormChanged){
     
       try{
         const result = await myCustomFetch(`./user/${userId}`,requestOptions)
@@ -152,51 +163,39 @@ $(() => {
           result.errors.forEach(err => {
             console.log('this is err:-',err);
             if(err.username){
-              $editFormValidator.showErrors({
-                username:err.username
-              })
+              editProfileUsername.setCustomValidity(err.username)
+              editProfileUsername.reportValidity()
             }
 
             if(err.email){
-              $editFormValidator.showErrors({
-                email:err.email
-              })
+              editProfileEmail.setCustomValidity(err.email)
+              editProfileEmail.reportValidity();
             }
           })
         }else if(result.status){
           console.log('result.statts:-',result.status);
           populateImages();
           populateProfile(userId)
-          $($editProfileModal).hide();
-          $('label.error').remove(); // Remove error label
-          $($editProfileModal).find('.error').removeClass('error')
+          document.querySelector('#edit-profile-modal').style.display = 'none';
+          Array.from(document.querySelectorAll(`#edit-profile-modal .error`))
+          .map(element =>{
+            element.classList.remove('error');
+          })
+          document.querySelector('#editProfileForm .error').removeClass('error')
         }
 
       }catch (err) {
         console.log('Error:-',err);
       }
     }else{
-      $editFormValidator.showErrors({
-        username:'Data not changed',
-        email:'Data not changed',
-        about:'Data not changed'
-      })
+      
+      Array.from(editProfileForm.elements)
+      .filter(tag => ["textarea", "input"].includes(tag.tagName.toLowerCase()))
+      .map(element => {
+        element.setCustomValidity('Data not changed');
+        element.reportValidity();
+        element.className = 'error'
+      });
+      
     }
-  });
-
-  // Logout modal click listners
-  const $logoutModal = '#id01';
-
-  $('#profile-settings-btn').on('click', (event) => {
-    $($logoutModal).show();
-  });
-
-  modalClickHandler($logoutModal);
-
-  $(`${$logoutModal} .deletebtn`).on('click', (event) => {
-    event.preventDefault();
-    sessionStorage.clear();
-    location.reload();
-    $($logoutModal).hide();
-  });
 });

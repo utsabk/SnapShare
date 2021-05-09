@@ -9,6 +9,26 @@ const userId = sessionStorage.getItem('userId');
 // Get userID from local storage
 const userToken = sessionStorage.getItem('token');
 
+// Hide HTML element
+const hideContent = (element) =>{
+  element.style.display = 'none';
+}
+
+// Display HTML element
+const showContent = (element) =>{
+  element.style.display = 'block';
+}
+
+ // Slide-toggle logic 
+const slideToggle = (target) => {
+
+  if (window.getComputedStyle(target).display === 'none') {
+    target.style.display = 'block'
+  } else {
+    target.style.display = 'none'
+  }
+}
+
 // fetch profile stats from back end
 const fetchProfileStatCount = async (userID, fetchRoute) => {
 
@@ -24,7 +44,7 @@ const fetchProfileStatCount = async (userID, fetchRoute) => {
     const response = await fetch(`./${fetchRoute}/user/${userID}`,fetchOptions);
     const result = await response.json();
     if (result) {
-      $(`.profile-stats #${fetchRoute}`).html(result.count);
+      document.querySelector(`.profile-stats #${fetchRoute}`).innerText = result.count;
       //return result.count;
     }
   } catch (err) {
@@ -53,25 +73,32 @@ const myCustomFetch = async (url, fetchOptions) => { // Serves Fetch API for fet
   }
 };
 
-const modalClickHandler = async (modal) =>{
+const modalClickHandler = async (modalQuery) =>{
 
-  $(`${modal} .close`).on('click', (e) => {
+  const modal = document.querySelector(modalQuery)
+
+  const closeBtn =  modal.getElementsByClassName('close')[0]
+
+  const cancelBtn = modal.getElementsByClassName('cancelbtn')[0]
+  
+  closeBtn.addEventListener('click', (e) => {
     e.preventDefault();
-
-    $(modal).hide();
+    hideContent(modal);
   });
 
-  $(`${modal} .cancelbtn`).on('click', (event) => {
+  cancelBtn.addEventListener('click', (event) => {
      event.preventDefault();
-    $('label.error').remove();
-    $(modal).find('.error').removeClass('error')
-    $(modal).hide();
+      Array.from(document.querySelectorAll(`${modalQuery} .error`))
+      .map(element =>{
+        element.classList.remove('error');
+      })
+      hideContent(modal);
   });
 
   // When the user clicks anywhere outside of the modal, close it
-  $(document).on('click', (event) => {
-    if ($(event.target).is(modal)) {
-      $(modal).hide();
+  document.addEventListener('click', (event) => {
+    if (event.target == modal) {
+      hideContent(modal);
     }
   });
  
@@ -134,7 +161,7 @@ const timeAgo = (time) => {
 // Update comment's time
 const updateTimeElement = (element, time, timeInterval) => {
   setInterval(() => {
-    element.html(timeAgo(time)); //Depending upon the "timeInterval" ,"time" is updated on each "element"
+    element.innerText = timeAgo(time); //Depending upon the "timeInterval" ,"time" is updated on each "element"
   }, timeInterval * 1000);
 };
 
@@ -152,4 +179,4 @@ const updateTimeInterval = (element, time) => {
 };
     
 
-export { userId, userToken, fetchProfileStatCount, myCustomFetch, timeDiff, timeAgo , updateTimeInterval, modalClickHandler};
+export { userId, userToken, fetchProfileStatCount, myCustomFetch, timeDiff, timeAgo , updateTimeInterval, modalClickHandler, hideContent, showContent, slideToggle};

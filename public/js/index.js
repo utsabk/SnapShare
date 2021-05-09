@@ -8,6 +8,9 @@ import {
   timeAgo,
   updateTimeInterval,
   modalClickHandler,
+  showContent,
+  hideContent,
+  slideToggle
 } from './main.js';
 
 //<! HTML for Post info--===============================================================================================-->
@@ -61,9 +64,9 @@ const postData = `<div class="gallery-item-info">
 
 //Populate each cards
 const createPostCards = (posts) => {
-  $('.gallery').html('');
+  document.querySelector('.gallery').innerHTML = '';
   posts.forEach((post, i) => {
-    $('.gallery').append(
+    document.querySelector('.gallery').insertAdjacentHTML('beforeend',
       // Each gallery div is assigned with unique id with index number 'image-index-${i}'
       `<div id="image-index-${i}" class="gallery-item" tabindex="0">
         
@@ -85,45 +88,47 @@ const createPostCards = (posts) => {
     const $galleryItemInfo = `${$imageWithIndex} .gallery-item-info`;
     const $commentSection = `${$imageWithIndex} .comment-section`;
     const $deleteModal = `${$imageWithIndex} .modal`;
-    const $likeBtn = $(`${$galleryItemInfo} #like-button`);
-    const $commentBtn = $(`${$galleryItemInfo} #comment-button`);
+    const $likeBtn = document.querySelector(`${$galleryItemInfo} #like-button`);
+    const $commentBtn = document.querySelector(`${$galleryItemInfo} #comment-button`);
     const $postedComments = `${$commentSection} #posted-comments`;
     const $commentInputField = `${$commentSection} textarea`;
 
-    const $postUplodedTime = $(`${$galleryItemInfo} .m-0`);
+    const $postUplodedTime = document.querySelector(`${$galleryItemInfo} .m-0`);
 
     // Attach posted time for each post when loded first time
-    $postUplodedTime.html(timeAgo(post.creation_date));
+    $postUplodedTime.innerText = timeAgo(post.creation_date);
 
     // Update posted time for each post every timeinterval
     updateTimeInterval($postUplodedTime, post.creation_date);
 
     // Only owner of the post allowed to delete
     if (userId == post.owner_id) {
-      $(`${$imageWithIndex} .chip i`).show();
+      showContent(document.querySelector(`${$imageWithIndex} .chip i`))
     }
 
     // Populate Likes on each post
     // When like button is clicked
-    $likeBtn.on('click', (e) => {
-      if ($likeBtn.html() == 'Like') {
+    $likeBtn.addEventListener('click', (e) => {
+      console.log('like btn clicked');
+      if ($likeBtn.innerText == 'Like') {
         fetchLikes('POST', 'add', post.image_id);
-        $likeBtn.html('Liked');
-        $likeBtn.css('background-color', '#3675EA');
+        $likeBtn.innerText = 'Liked';
+        $likeBtn.style.backgroundColor = '#3675EA';
       } else {
         fetchLikes('DELETE', 'remove', post.image_id);
-        $likeBtn.html('Like');
-        $likeBtn.css('background-color', '');
+        $likeBtn.innerText = 'Like';
+        $likeBtn.style.backgroundColor = '';
       }
     });
 
     // Fetch likes of a post from backend for all users
     const getLikes = async (imageId) => {
+      const $likeCount = document.querySelector(`${$imageWithIndex} #likes-count`)
       const like = await myCustomFetch(`./like/${imageId}`);
       if (like.likes_count) {
-        $(`${$imageWithIndex} #likes-count`).html(like.likes_count);
+        $likeCount.innerHTML = like.likes_count;
       } else {
-        $(`${$imageWithIndex} #likes-count`).html('');
+        $likeCount.innerHTML = '';
       }
     };
 
@@ -149,20 +154,20 @@ const createPostCards = (posts) => {
       }
       if (like.status) {
         const image = like.status.image_id;
-        $likeBtn.html('Liked');
-        $likeBtn.css('background-color', '#3675EA');
+        $likeBtn.innerText = 'Liked';
+        $likeBtn.style.backgroundColor = '#3675EA'
       }
     };
 
     // Populate comments on each post
 
     //Slide down & up comment section
-    $commentBtn.on('click', (e) => {
-      $($commentSection).slideToggle('slow');
+    $commentBtn.addEventListener('click', (e) => {
+      slideToggle(document.querySelector($commentSection))
     });
 
     const createComments = async (comments) => {
-      $($postedComments).html('');
+      document.querySelector($postedComments).innerHTML ='';
       const comments_count = comments.filter(
         (comment) => comment.image_id == post.image_id
       ).length;
@@ -180,18 +185,20 @@ const createPostCards = (posts) => {
           <div class="comment-body">
             <p> ${comment.content}</p>
           </div>`;
-        $($postedComments).append(listItem);
+          document.querySelector($postedComments).insertAdjacentHTML('afterbegin',listItem)
 
         // update time for each comment
-        $(`${$postedComments} .m-0`).each((index, element) => {
+        const comments = document.querySelectorAll(`${$postedComments} .m-0`)
+        Array.from(comments)
+        .map(element => {
           if (element.id == comment.comment_id) {
-            updateTimeInterval($(element), comment.time_stamp);
+            updateTimeInterval(element, comment.time_stamp);
           }
         });
 
         // If more than one comment update comment element
         if (comments_count) {
-          $(`${$imageWithIndex} #comments-count`).html(comments_count);
+          document.querySelector(`${$imageWithIndex} #comments-count`).innerText = comments_count;
         }
       });
     };
@@ -204,22 +211,22 @@ const createPostCards = (posts) => {
     };
 
     //Validate the comment input is not blank
-    $($commentInputField).on('keyup', (event) => {
-      const $inputVal = $($commentInputField).val();
+    document.querySelector($commentInputField).addEventListener('keyup', (event) => {
+      const inputVal = document.querySelector($commentInputField).value;
 
-      if ($inputVal != '') {
-        $(`${$commentSection} button`).attr('disabled', false);
+      if (inputVal != '') {
+        document.querySelector(`${$commentSection} button`).disabled = false;
       } else {
-        $(`${$commentSection} button`).attr('disabled', true);
+        document.querySelector(`${$commentSection} button`).disabled = true;
       }
     });
 
     // When comment is posted
-    $(`${$commentSection} form`).on('submit', async (event) => {
+    document.querySelector(`${$commentSection} form`).addEventListener('submit', async (event) => {
       event.preventDefault();
 
       const urlencoded = new URLSearchParams();
-      urlencoded.append('content', $($commentInputField).val());
+      urlencoded.append('content', document.querySelector($commentInputField).value);
       urlencoded.append('userId', userId);
       urlencoded.append('imageId', post.image_id);
 
@@ -233,13 +240,15 @@ const createPostCards = (posts) => {
       };
       const result = await myCustomFetch('./comment/', requestOptions);
       if (result.message) {
-        $($commentInputField).val('');
-        $(`${$commentSection} button`).attr('disabled', true);
+        document.querySelector($commentInputField).value = '';
+        document.querySelector(`${$commentSection} button`).disabled = true;
         getComments(post.image_id);
       }
     });
 
-    $('.gallery-image').on('click', () => {
+    // When a image is clicked, open in a new window
+    const galleryItem = document.querySelector(`${$imageWithIndex} .gallery-image`);
+    galleryItem.addEventListener('click', () => {
       //Get original image URL
       const imgUrl = `./uploads/${post.imagename}`;
       //Open image in new tab
@@ -247,14 +256,14 @@ const createPostCards = (posts) => {
     });
 
     // When clicked on the trash icon
-    $(`${$imageWithIndex} #trash`).on('click', (event) => {
-      $($deleteModal).show(); // delete picture modal
+    document.querySelector(`${$imageWithIndex} #trash`).addEventListener('click', (event) => {
+      showContent(document.querySelector($deleteModal)) // delete picture modal
     });
 
     modalClickHandler($deleteModal);
 
     // When trash icon is presse, DELETE a post/image
-    $(`${$deleteModal} .deletebtn`).on('click', async (event) => {
+    document.querySelector(`${$deleteModal} .deletebtn`).addEventListener('click', async (event) => {
       event.preventDefault();
 
       const fetchOptions = {
@@ -273,7 +282,7 @@ const createPostCards = (posts) => {
         fetchProfileStatCount(userId, 'image');
         fetchProfileStatCount(userId, 'like');
         fetchProfileStatCount(userId, 'comment');
-        $($deleteModal).hide();
+        hideContent(document.querySelector($deleteModal))
       }
     });
 
@@ -285,11 +294,12 @@ const createPostCards = (posts) => {
 
     // Like and Comment allowed only when logged in
     if (!userId) {
-      $($likeBtn).prop('disabled', true);
-      $($commentBtn).prop('disabled', true);
+      $likeBtn.disabled = true;
+      $commentBtn.disabled = true;
+
     } else {
-      $($likeBtn).prop('disabled', false);
-      $($commentBtn).prop('disabled', false);
+      $likeBtn.disabled = false;
+      $commentBtn.disabled = false;
       fetchLikes('POST', 'status', post.image_id); //Get the staus of like button
     }
 
@@ -305,13 +315,13 @@ const populateImages = async () => {
   createPostCards(images);
 };
 
-$(() => {
-  populateImages(); // call this when loaded
+
+ populateImages(); // call this when loaded
 
   //chageDPPost()
 
   // Eventlistner to reflect file name
-  $('#fileInput').on('change', (e) => {
+  document.getElementById('fileInput').addEventListener('change', (e) => {
     // Get the selected file
     const [file] = e.target.files;
     // Get the file name and size
@@ -319,15 +329,15 @@ $(() => {
     // Convert size in bytes to kilo bytes
     const fileSize = (size / 1000).toFixed(2);
 
-    $('#fileLabel').text(fileName);
+    document.getElementById('fileLabel').innerText = fileName;
   });
 
   // submit upload image
-  $('.upload-form').on('submit', async (event) => {
+  document.querySelector('.upload-form').addEventListener('submit', async (event) => {
     event.preventDefault();
 
     const fd = new FormData();
-    fd.append('image', $('#fileInput')[0].files[0]);
+    fd.append('image', document.getElementById('fileInput').files[0]);
     fd.append('ownerId', userId);
 
     const fetchOptions = {
@@ -343,12 +353,29 @@ $(() => {
     const result = await myCustomFetch('./image/', fetchOptions);
 
     if (result.status) {
-      $('#fileLabel').text('Upload');
-      $('.upload-form').trigger('reset');
+      document.getElementById('fileLabel').innerText = 'Upload';
+      document.querySelector('.upload-form').reset();
       populateImages();
       fetchProfileStatCount(userId, 'image');
     }
   });
-});
+
+
+  // Logout modal click listners
+  const $logoutModal = '#id01';
+
+  document.getElementById('profile-logout-btn').addEventListener('click', (event) => {
+    console.log('Profile logout clicked');
+    showContent(document.getElementById('id01'))
+  });
+
+  modalClickHandler($logoutModal);
+
+  document.querySelector(`${$logoutModal} .deletebtn`).addEventListener('click', (event) => {
+    event.preventDefault();
+    sessionStorage.clear();
+    location.reload();
+    hideContent(document.querySelector($logoutModal))
+  });
 
 export { populateImages, createPostCards };
