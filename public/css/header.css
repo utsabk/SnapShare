@@ -31,15 +31,13 @@
   align-items: center;
 }
 .header input[type='text'] {
-  width: 85%;
   font-size: 17px;
   padding: 6px 10px;
   background-color: #fff;
 }
 .header .search-container button {
-  padding: 7px 10px;
+  padding: 8px;
   background: #ddd;
-  margin-top: 1px;
   font-size: 17px;
   border: none;
   float: right;

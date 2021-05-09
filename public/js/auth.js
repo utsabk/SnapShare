@@ -2,6 +2,53 @@
 
 const query = './auth/';
 
+// SignIn form elements
+const signInForm = document.getElementById('loginForm');
+const signInEmail = document.getElementById('signInEmail');
+const signInPassword = document.getElementById('signInPassword');
+const errorMessage = document.querySelector('.login100-form-errorMessage');
+
+// Signup form elements
+const signUpForm = document.getElementById('signUpForm');
+const signUpUsername = document.getElementById('signUpUsername');
+const signUpEmail = document.getElementById('signUpEmail');
+const signUpPassword = document.getElementById('signUpPassword');
+const confirmPassword = document.getElementById('confirmPassword');
+
+
+const validateEmail = () => {
+  const mailformat = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  if (!signUpEmail.value.match(mailformat)) {
+    signUpEmail.setCustomValidity('Valid email is required: ex@abc.xyz');
+    signUpEmail.reportValidity();
+  } else {
+    signUpEmail.setCustomValidity('');
+  }
+};
+
+const validatePassword = () => {
+  const passwordFormat = /^((?=.*[A-Z])[a-zA-Z\d]{5,})$/;
+  if (!signUpPassword.value.match(passwordFormat)) {
+    signUpPassword.setCustomValidity('Min 5 characters with one uppercase');
+  } else {
+    signUpPassword.setCustomValidity('');
+  }
+};
+
+const validatePasswordMatch = () => {
+  if (signUpPassword.value != confirmPassword.value) {
+    confirmPassword.setCustomValidity('Passwords do not match');
+    confirmPassword.reportValidity();
+  } else {
+    confirmPassword.setCustomValidity('');
+  }
+};
+
+// Event Listeners
+signUpEmail.onkeyup = validateEmail;
+signUpPassword.onkeyup = validatePassword;
+confirmPassword.onkeyup = validatePasswordMatch;
+
 const myFetch = async (endpoint, fd) => {
   var requestOptions = {
     method: 'POST',
@@ -30,38 +77,33 @@ const saveToken = (response) => {
   sessionStorage.setItem('token', response.token);
 };
 
-
-const registerUser = async (formData, validator) => {
+const registerUser = async (formData) => {
   try {
     const response = await myFetch('register', formData);
 
     /**
-     * Even though the form is validated in the frontend with `JQuery Validator`,
+     * Even though the form is validated in the frontend,
      * Request is also validated with `express-validator`, e.g. if email/username is already in use
      * Express validator will return errors object in case of validation failure
      */
     if (response.errors) {
       response.errors.forEach((error) => {
-        console.log('This is error: ' , error)
+        console.error('Validation error:-', error);
         if (error.username) {
-          validator.showErrors({
-            username: error.username,
-          });
+          signUpUsername.setCustomValidity(error.username);
+          signUpUsername.reportValidity();
         }
         if (error.email) {
-          validator.showErrors({
-            email: error.email,
-          });
+          signUpEmail.setCustomValidity(error.email);
+          signUpEmail.reportValidity();
         }
         if (error.password) {
-          validator.showErrors({
-            password: error.password,
-          });
+          signUpPassword.setCustomValidity(error.password);
+          signUpPassword.reportValidity();
         }
         if (error.confirmPassword) {
-          validator.showErrors({
-            confirm_pass: error.confirmPassword,
-          });
+          confirmPassword.setCustomValidity(error.confirmPassword);
+          confirmPassword.reportValidity();
         }
       });
     }
@@ -74,14 +116,14 @@ const registerUser = async (formData, validator) => {
   }
 };
 
-const loginUser = async (formData, errorLabel) => {
+const loginUser = async (formData) => {
   try {
     const response = await myFetch('login', formData);
     if (response.token) {
       saveToken(response);
       location.replace('./index.html');
     } else {
-      errorLabel.html(response.error);
+      errorMessage.innerHTML = response.error;
       console.log('Error occoured', response.error);
     }
   } catch (err) {
@@ -89,108 +131,45 @@ const loginUser = async (formData, errorLabel) => {
   }
 };
 
-$(() => {
-
-  $('#create-account-link').on('click',(event)=>{
-    $('#signUpForm').show();
-    $('#loginForm').hide(); 
-  })
-
-  $('#signin-link').on('click',(event)=>{
-    $('#signUpForm').hide();
-    $('#loginForm').show(); 
-  })
-
-
-  // Signup form elements 
-  /**
-   * Form validator from Jquery plugin 'Validator'
-   * @see {@link https://jqueryvalidation.org/documentation/}
-   */
-  $.validator.addMethod( // Custom validator
-    'customemail',
-    (value, element) => {
-      return /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
-        value
-      );
-    },
-    "Email doesn't match format:ex@abc.xyz"
-  );
-
-  $('#signUpForm').validate({
-    rules: {
-      username: {
-        required: true,
-        minlength: 3,
-      },
-      email: {
-        required: true,
-        customemail: true, // Custom validator being called
-      },
-      password: {
-        required: true,
-        minlength: 5,
-      },
-      confirm_pass: {
-        required: true,
-        minlength: 5,
-        equalTo: '#signUpPassword',
-      },
-      message: {
-        username: {
-          required: 'Username is required',
-          minlength: jQuery.validator.format(
-            'At least {0} characters required!'
-          ),
-        },
-
-        email: {
-          required: 'Email is required',
-          minlength: jQuery.validator.format(
-            'At least {0} characters required!'
-          ),
-        },
-        password: {
-          required: 'Password is required',
-          minlength: jQuery.validator.format(
-            'At least {0} characters required!'
-          ),
-        },
-        confirm_pass: {
-          equalTo: 'Password do not match',
-        },
-      },
-    },
-    submitHandler: (form) => { // Get called only if the form is valid
-      sessionStorage.clear();
-
-      var validator = $(form).validate();
-
-      const fd = {
-        username: $('#signUpUsername').val(),
-        email: $('#signUpEmail').val(),
-        password: $('#signUpPassword').val(),
-        confirmPassword: $('#confirmPassword').val(),
-      };
-
-      registerUser(fd, validator);
-     
-      
-    },
+document
+  .getElementById('create-account-link')
+  .addEventListener('click', (event) => {
+    document.getElementById('signUpForm').style.display = 'block';
+    document.getElementById('loginForm').style.display = 'none';
   });
 
-  // Signin form elements 
-  $('#loginForm').on('submit', async (event) => {
-    localStorage.clear();
+document.getElementById('signin-link').addEventListener('click', (event) => {
+  document.getElementById('signUpForm').style.display = 'none';
+  document.getElementById('loginForm').style.display = 'block';
+});
+
+// Signup form submit
+signUpForm.addEventListener('submit', (event) => {
+  if (signUpForm.checkValidity()) {
     event.preventDefault();
-
+    sessionStorage.clear();
     const fd = {
-      email: $('#signInEmail').val(),
-      password: $('#signInPassword').val(),
+      username: signUpUsername.value,
+      email: signUpEmail.value,
+      password: signUpPassword.value,
+      confirmPassword: confirmPassword.value,
     };
+    console.log('Signupform formdata:-', fd);
+    registerUser(fd);
+  } else {
+    console.log('Form is not validated');
+  }
+});
 
-    const $label = $('.login100-form-errorMessage');
+// Signin form submit
+signInForm.addEventListener('submit', async (event) => {
+  event.preventDefault();
+  localStorage.clear();
 
-    loginUser(fd, $label);
-  });
+  const fd = {
+    email: signInEmail.value,
+    password: signInPassword.value,
+  };
+
+  loginUser(fd);
 });

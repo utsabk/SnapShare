@@ -42,7 +42,7 @@ On the other hand it also allows to view posts uploaded by friends and react to 
 
 - [Express.js](https://expressjs.com/) - Back end web applicaton framework for NodeJS.
 - [REST API](https://restfulapi.net/) - The server will transfer to the client a representation of the state of the requested resource
-- [JQuery](https://jquery.com) - A JavaScript library to handle events, DOM manipulation and make Ajax calls.
+- [Vanilla JS](http://vanilla-js.com/) - JavaScript to create CRUD operations from the DOM (Create, Read, Update, Delete).
 - [Node MySQL 2](https://github.com/sidorares/node-mysql2) - MySQL client for Node.js which supports prepared statements, non-utf8 endcodings, binary log protocol, compression and ssl.
 - [Express-JWT](https://github.com/auth0/express-jwt) - Middleware for validating JWTs for authentication
 - [JSON Web Token](https://github.com/auth0/node-jsonwebtoken) - For generating JWTs used by authentication
@@ -70,7 +70,7 @@ frontend
     └─── public
         └─── css                #all css files
         └─── images             #all the images used
-        └─── js                 #make request to backend and display the reponse    
+        └─── js                 #CRUD operations and DOM manipulation
         └─── profiles           #all the profile pictures
         └─── uploads            #all uploded images
         └─── auth.html          #html for authentication

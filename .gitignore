@@ -1,3 +1,10 @@
+### SnapShare ###
+# Profile pictures
+public/profiles/
+
+# Uploded pictures
+public/uploads/
+
 
 ### macOS ###
 # General

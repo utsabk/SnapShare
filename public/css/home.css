@@ -402,11 +402,12 @@ img {
 
 }
 .comment-form textarea {
+  height: 32px;
   width: 100%;
   
 }
 .comment-form button {
-  padding: 8px;
+  height: 32px;
 }
 #posted-comments{
   position: relative;

@@ -3,10 +3,10 @@ import { myCustomFetch, userId } from './main.js';
 
 import { populateImages, createPostCards} from './index.js';
 
-const $searchForm = $('#search-form');
-const $searchInput = $('#search-form input');
+const searchForm = document.getElementById('search-form');
+const searchInput = document.querySelector('#search-form input');
 
-$searchInput.on('keyup', async(event) =>{
+searchInput.addEventListener('keyup', async(event) =>{
 
     event.preventDefault();
 
@@ -15,7 +15,7 @@ $searchInput.on('keyup', async(event) =>{
         redirect: 'follow'
     };
 
-    const query = $searchInput.val();
+    const query = searchInput.value;
 
     const response = await myCustomFetch(`./user/?name=${query}`,requestOptions);
 
