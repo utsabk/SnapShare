@@ -1,7 +1,7 @@
 <p align="center">
 
-<a href="https://github.com/utsabk/SnapShare/graphs/contributors" alt="Contributors">
-    <img src="https://img.shields.io/github/contributors/badges/shields" /></a>
+<a href="https://github.com/utsabk/SnapShare/graphs/contributors/" alt="Contributors">
+    <img src="https://img.shields.io/github/contributors/utsabk/SnapShare.svg" /></a>
 
 <a href="https://www.gnu.org/licenses/gpl-3.0" alt="Contributors">
     <img src="https://img.shields.io/badge/License-GPLv3-blue.svg" /></a>
@@ -133,4 +133,6 @@ Your app should now be running on [localhost:3000](http://localhost:3000/)
 ## Demo
 
 
-[Full Video](https://youtu.be/RQE2pXkcyMk)
+- [App Features](https://youtu.be/7EPnRqcuO70)
+
+- [Backend & Coding](https://youtu.be/jybUo6KwUVs)
